@@ -90,7 +90,12 @@ function onStartClick(event, index, value) {
         refs[key].isToggled() && selectedEvents.push(key);
     });
 
-    that.setState({selectedEvents});
+    that.setState({selectedEvents: selectedEvents, start: true});
+}
+
+function onStopClick() {
+    let that = this;
+    that.setState({start: undefined});
 }
 
 function getSupportedEvents() {
@@ -115,13 +120,15 @@ class LiveSports extends Component {
         this.state = {
             liveMatches: [],
             selectedMatch: undefined,
-            selectedEvents: []
+            selectedEvents: [],
+            start: undefined
         }
     }
 
     render() {
         let that = this,
             selectedMatch = that.state.selectedMatch,
+            start = that.state.start,
             matchOptionsEl = [],
             eventsOptionsEl = [];
 
@@ -163,7 +170,8 @@ class LiveSports extends Component {
                         </div>
                     </div>
                     <div className="start-btn">
-                        <RaisedButton label="Start" primary={true} onClick={onStartClick.bind(this)}
+                        <RaisedButton label={start ? "Stop" : "Start"} primary={true}
+                                      onClick={(start ? onStopClick : onStartClick).bind(this)}
                                       style={ {margin: 'auto'}}/>
                     </div>
 
@@ -173,6 +181,42 @@ class LiveSports extends Component {
                     Jain</a></div>
             </div>
         )
+    }
+
+    componentDidUpdate() {
+        let that = this,
+            state = that.state;
+
+        if (state.start) {
+            let intervalFunction = function () {
+                $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/' + state.selectedMatch + '.json') + '&callback=?', function (data) {
+                    let event = JSON.parse(data.contents).comms[0].ball[0].event;
+
+                    if (Notification.permission !== "granted")
+                        Notification.requestPermission();
+                    else {
+                        var notification = new Notification('Score Update', {
+                            icon: 'http://apk-dl.com/detail/image/com.howabc.sultan.sportsflash-w250.png',
+                            body: event
+                        });
+
+                        window.setTimeout(() => {
+                            notification.close()
+                        }, 2000);
+
+                        notification.onclick = function () {
+                            window.open("http://www.espncricinfo.com/ci/engine/match/" + state.selectedMatch + ".html");
+                        };
+                    }
+                });
+            };
+
+            intervalFunction();
+            that.intervalId = window.setInterval(intervalFunction, 3 * 60 * 1000);
+        } else {
+            window.clearInterval(that.intervalId)
+        }
+        console.log('updated');
     }
 
     componentDidMount() {
@@ -218,28 +262,6 @@ class LiveSports extends Component {
         //            }]
         //    })
         //}, 1000);
-
-
-        //$.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/980909.json') + '&callback=?', function (data) {
-        //    let event = JSON.parse(data.contents).comms[0].ball[0].event;
-        //
-        //    if (Notification.permission !== "granted")
-        //        Notification.requestPermission();
-        //    else {
-        //        var notification = new Notification('Score Update', {
-        //            icon: 'http://apk-dl.com/detail/image/com.howabc.sultan.sportsflash-w250.png',
-        //            body: event
-        //        });
-        //
-        //        //window.setTimeout(() => {
-        //        //    notification.close()
-        //        //}, 2000);
-        //
-        //        notification.onclick = function () {
-        //            window.open("http://stackoverflow.com/a/13328397/1269037");
-        //        };
-        //    }
-        //});
 
         //  makeRequest();
 
