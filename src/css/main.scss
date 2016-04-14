@@ -1,0 +1,65 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.title {
+  text-align: center;
+  font-size: 50px;
+  padding: 20px;
+  color: white;
+  background: #3399ff;
+}
+
+.body {
+  margin: 48px 0;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  height: 18px;
+  background: #3399ff;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
+}
+
+.footer-heart {
+  color: red;
+}
+
+.control-group {
+  margin-bottom: 18px;
+
+  .control-label {
+    width: 750px;
+    margin: auto;
+    text-align: left;
+    color: rgba(0, 0, 0, 0.498039);
+    font-size: 12.5px;
+    margin-bottom: 5px;
+  }
+
+  .controls {
+    width: 750px;
+    margin: auto;
+  }
+}
+
+.start-btn {
+  text-align: center;
+}
+
+
