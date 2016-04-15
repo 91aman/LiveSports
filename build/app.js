@@ -19946,7 +19946,7 @@
 	                };
 
 	                intervalFunction();
-	                that.intervalId = window.setInterval(intervalFunction, 30 * 1000);
+	                that.intervalId = window.setInterval(intervalFunction, 15 * 1000);
 	            } else {
 	                window.clearInterval(that.intervalId);
 	            }
