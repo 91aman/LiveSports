@@ -9,72 +9,31 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import Toggle from 'material-ui/lib/toggle';
 import RaisedButton from 'material-ui/lib/raised-button';
 import $ from 'jquery';
+import _ from 'lodash';
 
-let httpRequest;
-function makeRequest() {
-    httpRequest = new XMLHttpRequest();
+let iconMap = {
+    FOUR: 'http://3.bp.blogspot.com/-9cSZuRMO65M/UOYn20oxGUI/AAAAAAAALgg/zTyw-uLPkO8/s1600/number4.jpg',
+    SIX: 'http://christchurch.barnet.sch.uk/wp-content/uploads/2015/10/year-6-thumbnail.jpg',
+    OUT: 'http://api.ning.com/files/lE4UVJcD*3lcgmdp0QRHLcsZdY7hPXLRIa9p6aEYxN0ez5J0hCT5StJNSZfivI8UgQnUNdMG*ju-VZqLIMeAvbK0j*K0NDPs/dreamstime_3538344.jpg'
+};
 
-    if (!httpRequest) {
-        alert('Giving up :( Cannot create an XMLHTTP instance');
-        return false;
-    }
-    httpRequest.onreadystatechange = alertContents;
-    httpRequest.open('GET', 'http://www.espncricinfo.com/ci/engine/match/980909.json?xhr=1');
-    httpRequest.send();
-}
+function pushNotification(ball) {
 
-function alertContents() {
-    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            console.log(httpRequest.responseText);
-        } else {
-            console.log('There was a problem with the request.');
-        }
-    }
-}
+    let that = this,
+        event = ball.event;
 
-function makeHtml5Request() {
-    $.ajax({
-
-        // The 'type' property sets the HTTP method.
-        // A value of 'PUT' or 'DELETE' will trigger a preflight request.
-        type: 'GET',
-
-        // The URL to make the request to.
-        url: 'http://www.espncricinfo.com/ci/engine/match/980909.json',
-
-        // The 'contentType' property sets the 'Content-Type' header.
-        // The JQuery default for this property is
-        // 'application/x-www-form-urlencoded; charset=UTF-8', which does not trigger
-        // a preflight. If you set this value to anything other than
-        // application/x-www-form-urlencoded, multipart/form-data, or text/plain,
-        // you will trigger a preflight request.
-        contentType: 'text/plain',
-
-        xhrFields: {
-            "Access-Control-Allow-Credentials": true,
-            // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-            // This can be used to set the 'withCredentials' property.
-            // Set the value to 'true' if you'd like to pass cookies to the server.
-            // If this is enabled, your server must respond with the header
-            // 'Access-Control-Allow-Credentials: true'.
-            withCredentials: false
-        },
-
-        headers: {
-            // Set any custom headers here.
-            // If you set any non-simple headers, your server must include these
-            // headers in the 'Access-Control-Allow-Headers' response header.
-        },
-
-        success: function () {
-            console.log('yey')
-        },
-
-        error: function () {
-            console.log(':(')
-        }
+    var notification = new Notification('Score Update', {
+        icon: iconMap[event],
+        body: event === 'OUT' ? ball.dismissal : ball.players
     });
+
+    //window.setTimeout(() => {
+    //    notification.close()
+    //}, 5000);
+
+    notification.onclick = function () {
+        window.open("http://www.espncricinfo.com/ci/engine/match/" + that.state.selectedMatch + ".html");
+    };
 }
 
 function onMatchChange(event, index, value) {
@@ -84,10 +43,10 @@ function onMatchChange(event, index, value) {
 function onStartClick(event, index, value) {
     let that = this,
         refs = that.refs,
-        selectedEvents = [];
+        selectedEvents = {};
 
     getSupportedEvents().forEach(({key, label})=> {
-        refs[key].isToggled() && selectedEvents.push(key);
+        refs[key].isToggled() && (selectedEvents[key] = 1);
     });
 
     that.setState({selectedEvents: selectedEvents, start: true});
@@ -108,7 +67,7 @@ function getSupportedEvents() {
             label: '6 runs'
         },
         {
-            key: 'WICKET',
+            key: 'OUT',
             label: 'Wicket'
         }]
 }
@@ -120,7 +79,7 @@ class LiveSports extends Component {
         this.state = {
             liveMatches: [],
             selectedMatch: undefined,
-            selectedEvents: [],
+            selectedEvents: {},
             start: undefined
         }
     }
@@ -185,34 +144,48 @@ class LiveSports extends Component {
 
     componentDidUpdate() {
         let that = this,
-            state = that.state;
+            state = that.state,
+            selectedEvents = state.selectedEvents;
 
         if (state.start) {
             let intervalFunction = function () {
-                $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/' + state.selectedMatch + '.json') + '&callback=?', function (data) {
-                    let event = JSON.parse(data.contents).comms[0].ball[0].event;
 
-                    if (Notification.permission !== "granted")
-                        Notification.requestPermission();
-                    else {
-                        var notification = new Notification('Score Update', {
-                            icon: 'http://apk-dl.com/detail/image/com.howabc.sultan.sportsflash-w250.png',
-                            body: event
-                        });
+                if (Notification.permission !== "granted") {
+                    Notification.requestPermission();
+                } else {
+                    $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/' + state.selectedMatch + '.json') + '&callback=?', function (data) {
 
-                        window.setTimeout(() => {
-                            notification.close()
-                        }, 2000);
+                        let comms = JSON.parse(data.contents).comms,
+                            balls = comms[0].ball,
+                            iter = 0,
 
-                        notification.onclick = function () {
-                            window.open("http://www.espncricinfo.com/ci/engine/match/" + state.selectedMatch + ".html");
-                        };
-                    }
-                });
+                            previousBall = that.previousBall || balls[0].overs_unique,
+                            previousBallInnings = that.previousBallInnings || balls[0].previousBallInnings;
+
+                        for (iter = 0; iter < comms.length; iter++) {
+                            let over = comms[iter],
+                                balls = over.ball,
+                                j = 0;
+
+                            for (j = 0; j < balls.length; j++) {
+                                let ball = balls[j];
+
+                                if (ball.overs_unique === previousBall) {
+                                    return;
+                                }
+
+                                selectedEvents[ball.event] && pushNotification.call(that, ball);
+
+                            }
+                        }
+
+                        that.previousBall = previousBall;
+                    });
+                }
             };
 
             intervalFunction();
-            that.intervalId = window.setInterval(intervalFunction, 3 * 60 * 1000);
+            that.intervalId = window.setInterval(intervalFunction, 1 * 60 * 1000);
         } else {
             window.clearInterval(that.intervalId)
         }
@@ -221,13 +194,6 @@ class LiveSports extends Component {
 
     componentDidMount() {
         let that = this;
-
-        //$('.iframe').load(() => {
-        //
-        //    var a = $('.iframe');
-        //    console.log('loaded');
-        //    makeHtml5Request();
-        //});
 
         $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', (data) => {
             let contentEl = $(data.contents),
@@ -249,24 +215,6 @@ class LiveSports extends Component {
 
             this.setState({liveMatches});
         });
-
-        //window.setTimeout(() => {
-        //    this.setState({
-        //        liveMatches: [{
-        //            id: "980911",
-        //            text: "Rising Pune Supergiants    163/5 (20 ov) v/s Gujarat Lions    164/3 (18/20 ov)"
-        //        },
-        //            {
-        //                id: "980912",
-        //                text: "lulwa    163/5 (20 ov) v/s Gujarat Lions    164/3 (18/20 ov)"
-        //            }]
-        //    })
-        //}, 1000);
-
-        //  makeRequest();
-
-        //
-
 
     }
 }
