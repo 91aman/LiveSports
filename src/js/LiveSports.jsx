@@ -27,9 +27,9 @@ function pushNotification(ball) {
         body: event === 'OUT' ? ball.dismissal : ball.players
     });
 
-    //window.setTimeout(() => {
-    //    notification.close()
-    //}, 5000);
+    window.setTimeout(() => {
+        notification.close()
+    }, 5000);
 
     notification.onclick = function () {
         window.open("http://www.espncricinfo.com/ci/engine/match/" + that.state.selectedMatch + ".html");
@@ -162,6 +162,8 @@ class LiveSports extends Component {
                             previousBall = that.previousBall || balls[0].overs_unique,
                             previousBallInnings = that.previousBallInnings || balls[0].previousBallInnings;
 
+                        that.previousBall = balls[0].overs_unique;
+
                         for (iter = 0; iter < comms.length; iter++) {
                             let over = comms[iter],
                                 balls = over.ball,
@@ -178,14 +180,12 @@ class LiveSports extends Component {
 
                             }
                         }
-
-                        that.previousBall = previousBall;
                     });
                 }
             };
 
             intervalFunction();
-            that.intervalId = window.setInterval(intervalFunction, 1 * 60 * 1000);
+            that.intervalId = window.setInterval(intervalFunction,  15 * 1000);
         } else {
             window.clearInterval(that.intervalId)
         }
