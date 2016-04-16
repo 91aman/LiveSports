@@ -8,23 +8,64 @@ import SelectField from 'material-ui/lib/SelectField';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Toggle from 'material-ui/lib/toggle';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CircularProgress from 'material-ui/lib/circular-progress';
+import ClassNames from 'classnames';
 import $ from 'jquery';
 import _ from 'lodash';
 
-let iconMap = {
-    FOUR: 'http://3.bp.blogspot.com/-9cSZuRMO65M/UOYn20oxGUI/AAAAAAAALgg/zTyw-uLPkO8/s1600/number4.jpg',
-    SIX: 'http://christchurch.barnet.sch.uk/wp-content/uploads/2015/10/year-6-thumbnail.jpg',
-    OUT: 'http://api.ning.com/files/lE4UVJcD*3lcgmdp0QRHLcsZdY7hPXLRIa9p6aEYxN0ez5J0hCT5StJNSZfivI8UgQnUNdMG*ju-VZqLIMeAvbK0j*K0NDPs/dreamstime_3538344.jpg'
+
+let eventMap = {
+    "1 run": {
+        label: '1 run',
+        icon: 'https://creativenglishlearning.files.wordpress.com/2010/09/number1.jpg'
+    },
+    "2 runs": {
+        label: '2 runs',
+        icon: 'http://tiengtrunghoanglien.com.vn/profiles/tiengtrunghoangliencomvn/uploads/attach/thumbnail/1408429533_s%C3%B2dinhmenh.jpg'
+    },
+    "3 runs": {
+        label: '3 runs',
+        icon: 'https://weeklytreats.files.wordpress.com/2011/05/number3.jpg'
+    },
+    FOUR: {
+        label: '4 runs',
+        icon: 'http://3.bp.blogspot.com/-9cSZuRMO65M/UOYn20oxGUI/AAAAAAAALgg/zTyw-uLPkO8/s1600/number4.jpg'
+    },
+    SIX: {
+        label: '6 runs',
+        icon: 'http://christchurch.barnet.sch.uk/wp-content/uploads/2015/10/year-6-thumbnail.jpg'
+    },
+    OUT: {
+        label: 'Wicket',
+        icon: 'http://www.nickjr.com/nickjr/buttons/alphabuttons/default-08-2015/icon-alpha-w-default-08-2015-2x.png'
+    }
 };
 
-function pushNotification(ball) {
+function pushNotification(ball, content) {
 
     let that = this,
-        event = ball.event;
+        event = ball.event,
+        inningsDetails = content.live.innings,
+        battingTeamId = inningsDetails.batting_team_id,
+        battingTeamDetails = _.filter(content.team, (team) => {
+            return team.team_id === battingTeamId;
+        })[0],
+        battingTeamName = battingTeamDetails.team_abbreviation || battingTeamDetails.team_short_name || battingTeamDetails.team_name,
+        score = inningsDetails.runs + '/' + inningsDetails.wickets + ' in ' + inningsDetails.overs,
+        eventDetails = eventMap[event],
+        body;
+
+    if (event === 'OUT') {
+        body = ball.dismissal;
+    } else {
+        body = ball.players + ', ' + eventDetails.label
+    }
+
+    body += '\n\n' + battingTeamName + ' : ' + score;
 
     var notification = new Notification('Score Update', {
-        icon: iconMap[event],
-        body: event === 'OUT' ? ball.dismissal : ball.players
+        icon: eventDetails.icon,
+        body: body
     });
 
     window.setTimeout(() => {
@@ -45,7 +86,7 @@ function onStartClick(event, index, value) {
         refs = that.refs,
         selectedEvents = {};
 
-    getSupportedEvents().forEach(({key, label})=> {
+    _.keys(eventMap).forEach((key) => {
         refs[key].isToggled() && (selectedEvents[key] = 1);
     });
 
@@ -57,21 +98,6 @@ function onStopClick() {
     that.setState({start: undefined});
 }
 
-function getSupportedEvents() {
-    return [{
-        key: 'FOUR',
-        label: '4 runs'
-    },
-        {
-            key: 'SIX',
-            label: '6 runs'
-        },
-        {
-            key: 'OUT',
-            label: 'Wicket'
-        }]
-}
-
 class LiveSports extends Component {
 
     constructor() {
@@ -80,14 +106,16 @@ class LiveSports extends Component {
             liveMatches: [],
             selectedMatch: undefined,
             selectedEvents: {},
-            start: undefined
+            start: undefined,
+            loading: true
         }
     }
 
     render() {
         let that = this,
-            selectedMatch = that.state.selectedMatch,
-            start = that.state.start,
+            state = that.state,
+            selectedMatch = state.selectedMatch,
+            start = state.start,
             matchOptionsEl = [],
             eventsOptionsEl = [];
 
@@ -95,20 +123,25 @@ class LiveSports extends Component {
             matchOptionsEl.push(<MenuItem key={value.id} value={value.id} primaryText={value.text}></MenuItem>)
         });
 
-        getSupportedEvents().forEach((value) => {
-            eventsOptionsEl.push(<Toggle
-                key={value.key}
-                ref={value.key}
-                label={value.label}
-                style={{
-                                    width:'300px',
-                                    marginBottom: '16px'
-                                }}
-            />)
+        _.forEach(eventMap, (value, key)=> {
+            {
+                eventsOptionsEl.push(<Toggle
+                    key={key}
+                    ref={key}
+                    label={value.label}
+                    className="notificationSelector"
+                />)
+            }
         });
+
 
         return (
             <div>
+                <div className={ClassNames("overlay",{
+                hide : !state.loading
+                })}>
+                    <CircularProgress className="overlay-icon"/>
+                </div>
                 <div className="title">Live Sports</div>
                 <div className="body">
                     <div className="control-group">
@@ -155,7 +188,8 @@ class LiveSports extends Component {
                 } else {
                     $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/' + state.selectedMatch + '.json') + '&callback=?', function (data) {
 
-                        let comms = JSON.parse(data.contents).comms,
+                        let content = JSON.parse(data.contents),
+                            comms = content.comms,
                             balls = comms[0].ball,
                             iter = 0,
 
@@ -176,7 +210,7 @@ class LiveSports extends Component {
                                     return;
                                 }
 
-                                selectedEvents[ball.event] && pushNotification.call(that, ball);
+                                selectedEvents[ball.event] && pushNotification.call(that, ball, content);
 
                             }
                         }
@@ -185,7 +219,7 @@ class LiveSports extends Component {
             };
 
             intervalFunction();
-            that.intervalId = window.setInterval(intervalFunction,  15 * 1000);
+            that.intervalId = window.setInterval(intervalFunction, 15 * 1000);
         } else {
             window.clearInterval(that.intervalId)
         }
@@ -194,6 +228,10 @@ class LiveSports extends Component {
 
     componentDidMount() {
         let that = this;
+
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
 
         $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', (data) => {
             let contentEl = $(data.contents),
@@ -213,7 +251,7 @@ class LiveSports extends Component {
                 });
             });
 
-            this.setState({liveMatches});
+            this.setState({liveMatches, loading: false});
         });
 
     }
