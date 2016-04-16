@@ -2,6 +2,28 @@ html, body {
   height: 100%;
 }
 
+.overlay{
+  position:absolute;
+  height:100%;
+  width:100%;
+  top:0;
+  left:0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1;
+  text-align: center;
+
+  &.hide{
+    display: none;
+  }
+
+  .overlay-icon{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+}
+
 body {
   margin: 0;
   font-family: sans-serif;
@@ -55,6 +77,22 @@ body {
   .controls {
     width: 750px;
     margin: auto;
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+}
+
+.notificationSelector{
+  width:250px !important;
+  margin-bottom: 16px;
+  float:left;
+
+  &:nth-child(odd){
+    margin-right:250px;
   }
 }
 

@@ -19713,6 +19713,14 @@
 
 	var _raisedButton2 = _interopRequireDefault(_raisedButton);
 
+	var _circularProgress = __webpack_require__(288);
+
+	var _circularProgress2 = _interopRequireDefault(_circularProgress);
+
+	var _classnames = __webpack_require__(289);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _jquery = __webpack_require__(276);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
@@ -19732,20 +19740,58 @@
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Description :
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-	var iconMap = {
-	    FOUR: 'http://3.bp.blogspot.com/-9cSZuRMO65M/UOYn20oxGUI/AAAAAAAALgg/zTyw-uLPkO8/s1600/number4.jpg',
-	    SIX: 'http://christchurch.barnet.sch.uk/wp-content/uploads/2015/10/year-6-thumbnail.jpg',
-	    OUT: 'http://api.ning.com/files/lE4UVJcD*3lcgmdp0QRHLcsZdY7hPXLRIa9p6aEYxN0ez5J0hCT5StJNSZfivI8UgQnUNdMG*ju-VZqLIMeAvbK0j*K0NDPs/dreamstime_3538344.jpg'
+	var eventMap = {
+	    "1 run": {
+	        label: '1 run',
+	        icon: 'https://creativenglishlearning.files.wordpress.com/2010/09/number1.jpg'
+	    },
+	    "2 runs": {
+	        label: '2 runs',
+	        icon: 'http://tiengtrunghoanglien.com.vn/profiles/tiengtrunghoangliencomvn/uploads/attach/thumbnail/1408429533_s%C3%B2dinhmenh.jpg'
+	    },
+	    "3 runs": {
+	        label: '3 runs',
+	        icon: 'https://weeklytreats.files.wordpress.com/2011/05/number3.jpg'
+	    },
+	    FOUR: {
+	        label: '4 runs',
+	        icon: 'http://3.bp.blogspot.com/-9cSZuRMO65M/UOYn20oxGUI/AAAAAAAALgg/zTyw-uLPkO8/s1600/number4.jpg'
+	    },
+	    SIX: {
+	        label: '6 runs',
+	        icon: 'http://christchurch.barnet.sch.uk/wp-content/uploads/2015/10/year-6-thumbnail.jpg'
+	    },
+	    OUT: {
+	        label: 'Wicket',
+	        icon: 'http://www.nickjr.com/nickjr/buttons/alphabuttons/default-08-2015/icon-alpha-w-default-08-2015-2x.png'
+	    }
 	};
 
-	function pushNotification(ball) {
+	function pushNotification(ball, content) {
 
 	    var that = this,
-	        event = ball.event;
+	        event = ball.event,
+	        inningsDetails = content.live.innings,
+	        battingTeamId = inningsDetails.batting_team_id,
+	        battingTeamDetails = _lodash2.default.filter(content.team, function (team) {
+	        return team.team_id === battingTeamId;
+	    })[0],
+	        battingTeamName = battingTeamDetails.team_abbreviation || battingTeamDetails.team_short_name || battingTeamDetails.team_name,
+	        score = inningsDetails.runs + '/' + inningsDetails.wickets + ' in ' + inningsDetails.overs,
+	        eventDetails = eventMap[event],
+	        body = void 0;
+
+	    if (event === 'OUT') {
+	        body = ball.dismissal;
+	    } else {
+	        body = ball.players + ', ' + eventDetails.label;
+	    }
+
+	    body += '\n\n' + battingTeamName + ' : ' + score;
 
 	    var notification = new Notification('Score Update', {
-	        icon: iconMap[event],
-	        body: event === 'OUT' ? ball.dismissal : ball.players
+	        icon: eventDetails.icon,
+	        body: body
 	    });
 
 	    window.setTimeout(function () {
@@ -19766,10 +19812,7 @@
 	        refs = that.refs,
 	        selectedEvents = {};
 
-	    getSupportedEvents().forEach(function (_ref) {
-	        var key = _ref.key;
-	        var label = _ref.label;
-
+	    _lodash2.default.keys(eventMap).forEach(function (key) {
 	        refs[key].isToggled() && (selectedEvents[key] = 1);
 	    });
 
@@ -19779,19 +19822,6 @@
 	function onStopClick() {
 	    var that = this;
 	    that.setState({ start: undefined });
-	}
-
-	function getSupportedEvents() {
-	    return [{
-	        key: 'FOUR',
-	        label: '4 runs'
-	    }, {
-	        key: 'SIX',
-	        label: '6 runs'
-	    }, {
-	        key: 'OUT',
-	        label: 'Wicket'
-	    }];
 	}
 
 	var LiveSports = function (_Component) {
@@ -19806,7 +19836,8 @@
 	            liveMatches: [],
 	            selectedMatch: undefined,
 	            selectedEvents: {},
-	            start: undefined
+	            start: undefined,
+	            loading: true
 	        };
 	        return _this;
 	    }
@@ -19815,8 +19846,9 @@
 	        key: 'render',
 	        value: function render() {
 	            var that = this,
-	                selectedMatch = that.state.selectedMatch,
-	                start = that.state.start,
+	                state = that.state,
+	                selectedMatch = state.selectedMatch,
+	                start = state.start,
 	                matchOptionsEl = [],
 	                eventsOptionsEl = [];
 
@@ -19824,21 +19856,27 @@
 	                matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: value.id, value: value.id, primaryText: value.text }));
 	            });
 
-	            getSupportedEvents().forEach(function (value) {
-	                eventsOptionsEl.push(_react2.default.createElement(_toggle2.default, {
-	                    key: value.key,
-	                    ref: value.key,
-	                    label: value.label,
-	                    style: {
-	                        width: '300px',
-	                        marginBottom: '16px'
-	                    }
-	                }));
+	            _lodash2.default.forEach(eventMap, function (value, key) {
+	                {
+	                    eventsOptionsEl.push(_react2.default.createElement(_toggle2.default, {
+	                        key: key,
+	                        ref: key,
+	                        label: value.label,
+	                        className: 'notificationSelector'
+	                    }));
+	                }
 	            });
 
 	            return _react2.default.createElement(
 	                'div',
 	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: (0, _classnames2.default)("overlay", {
+	                            hide: !state.loading
+	                        }) },
+	                    _react2.default.createElement(_circularProgress2.default, { className: 'overlay-icon' })
+	                ),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'title' },
@@ -19918,7 +19956,8 @@
 	                    } else {
 	                        _jquery2.default.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/' + state.selectedMatch + '.json') + '&callback=?', function (data) {
 
-	                            var comms = JSON.parse(data.contents).comms,
+	                            var content = JSON.parse(data.contents),
+	                                comms = content.comms,
 	                                balls = comms[0].ball,
 	                                iter = 0,
 	                                previousBall = that.previousBall || balls[0].overs_unique,
@@ -19938,7 +19977,7 @@
 	                                        return;
 	                                    }
 
-	                                    selectedEvents[ball.event] && pushNotification.call(that, ball);
+	                                    selectedEvents[ball.event] && pushNotification.call(that, ball, content);
 	                                }
 	                            }
 	                        });
@@ -19959,6 +19998,10 @@
 
 	            var that = this;
 
+	            if (Notification.permission !== "granted") {
+	                Notification.requestPermission();
+	            }
+
 	            _jquery2.default.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', function (data) {
 	                var contentEl = (0, _jquery2.default)(data.contents),
 	                    liveMatches = [];
@@ -19977,7 +20020,7 @@
 	                    });
 	                });
 
-	                _this2.setState({ liveMatches: liveMatches });
+	                _this2.setState({ liveMatches: liveMatches, loading: false });
 	            });
 	        }
 	    }]);
@@ -57786,7 +57829,7 @@
 
 
 	// module
-	exports.push([module.id, "html, body {\n  height: 100%; }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3399ff; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3399ff;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n\n.start-btn {\n  text-align: center; }\n", ""]);
+	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3399ff; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3399ff;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n", ""]);
 
 	// exports
 
@@ -58390,6 +58433,335 @@
 	};
 
 	module.exports = keyOf;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _stylePropable = __webpack_require__(162);
+
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
+
+	var _autoPrefix = __webpack_require__(164);
+
+	var _autoPrefix2 = _interopRequireDefault(_autoPrefix);
+
+	var _transitions = __webpack_require__(190);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	var CircularProgress = _react2.default.createClass({
+	  displayName: 'CircularProgress',
+
+	  propTypes: {
+	    /**
+	     * Override the progress's color.
+	     */
+	    color: _react2.default.PropTypes.string,
+
+	    /**
+	     * Style for inner wrapper div.
+	     */
+	    innerStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * The max value of progress, only works in determinate mode.
+	     */
+	    max: _react2.default.PropTypes.number,
+
+	    /**
+	     * The min value of progress, only works in determinate mode.
+	     */
+	    min: _react2.default.PropTypes.number,
+
+	    /**
+	     * The mode of show your progress, indeterminate
+	     * for when there is no value for progress.
+	     */
+	    mode: _react2.default.PropTypes.oneOf(['determinate', 'indeterminate']),
+
+	    /**
+	     * The size of the progress.
+	     */
+	    size: _react2.default.PropTypes.number,
+
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object,
+
+	    /**
+	     * The value of progress, only works in determinate mode.
+	     */
+	    value: _react2.default.PropTypes.number
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_stylePropable2.default],
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      mode: 'indeterminate',
+	      value: 0,
+	      min: 0,
+	      max: 100,
+	      size: 1
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var wrapper = _reactDom2.default.findDOMNode(this.refs.wrapper);
+	    var path = _reactDom2.default.findDOMNode(this.refs.path);
+
+	    this._scalePath(path);
+	    this._rotateWrapper(wrapper);
+	  },
+
+	  //to update theme inside state whenever a new theme is passed down
+	  //from the parent / owner using context
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    clearTimeout(this.scalePathTimer);
+	    clearTimeout(this.rotateWrapperTimer);
+	  },
+	  _getRelativeValue: function _getRelativeValue() {
+	    var value = this.props.value;
+	    var min = this.props.min;
+	    var max = this.props.max;
+
+	    var clampedValue = Math.min(Math.max(min, value), max);
+	    var rangeValue = max - min;
+	    var relValue = Math.round(clampedValue / rangeValue * 10000) / 10000;
+	    return relValue * 100;
+	  },
+
+	  scalePathTimer: undefined,
+	  rotateWrapperTimer: undefined,
+
+	  _scalePath: function _scalePath(path, step) {
+	    var _this = this;
+
+	    if (this.props.mode !== 'indeterminate') return;
+
+	    step = step || 0;
+	    step %= 3;
+
+	    if (step === 0) {
+	      path.style.strokeDasharray = '1, 200';
+	      path.style.strokeDashoffset = 0;
+	      path.style.transitionDuration = '0ms';
+	    } else if (step === 1) {
+	      path.style.strokeDasharray = '89, 200';
+	      path.style.strokeDashoffset = -35;
+	      path.style.transitionDuration = '750ms';
+	    } else {
+	      path.style.strokeDasharray = '89,200';
+	      path.style.strokeDashoffset = -124;
+	      path.style.transitionDuration = '850ms';
+	    }
+
+	    this.scalePathTimer = setTimeout(function () {
+	      return _this._scalePath(path, step + 1);
+	    }, step ? 750 : 250);
+	  },
+	  _rotateWrapper: function _rotateWrapper(wrapper) {
+	    var _this2 = this;
+
+	    if (this.props.mode !== 'indeterminate') return;
+
+	    _autoPrefix2.default.set(wrapper.style, 'transform', 'rotate(0deg)', this.state.muiTheme);
+	    _autoPrefix2.default.set(wrapper.style, 'transitionDuration', '0ms', this.state.muiTheme);
+
+	    setTimeout(function () {
+	      _autoPrefix2.default.set(wrapper.style, 'transform', 'rotate(1800deg)', _this2.state.muiTheme);
+	      _autoPrefix2.default.set(wrapper.style, 'transitionDuration', '10s', _this2.state.muiTheme);
+	      _autoPrefix2.default.set(wrapper.style, 'transitionTimingFunction', 'linear', _this2.state.muiTheme);
+	    }, 50);
+
+	    this.rotateWrapperTimer = setTimeout(function () {
+	      return _this2._rotateWrapper(wrapper);
+	    }, 10050);
+	  },
+	  getTheme: function getTheme() {
+	    return this.state.muiTheme.rawTheme.palette;
+	  },
+	  getStyles: function getStyles(zoom) {
+	    zoom *= 1.4;
+	    var size = '50px';
+
+	    var margin = Math.round((50 * zoom - 50) / 2);
+
+	    if (margin < 0) margin = 0;
+
+	    var styles = {
+	      root: {
+	        position: 'relative',
+	        margin: margin + 'px',
+	        display: 'inline-block',
+	        width: size,
+	        height: size
+	      },
+	      wrapper: {
+	        width: size,
+	        height: size,
+	        display: 'inline-block',
+	        transition: _transitions2.default.create('transform', '20s', null, 'linear')
+	      },
+	      svg: {
+	        height: size,
+	        position: 'relative',
+	        transform: 'scale(' + zoom + ')',
+	        width: size
+	      },
+	      path: {
+	        strokeDasharray: '89,200',
+	        strokeDashoffset: 0,
+	        stroke: this.props.color || this.getTheme().primary1Color,
+	        strokeLinecap: 'round',
+	        transition: _transitions2.default.create('all', '1.5s', null, 'ease-in-out')
+	      }
+	    };
+
+	    _autoPrefix2.default.set(styles.wrapper, 'transitionTimingFunction', 'linear', this.state.muiTheme);
+
+	    if (this.props.mode === 'determinate') {
+	      var relVal = this._getRelativeValue();
+	      styles.path.transition = _transitions2.default.create('all', '0.3s', null, 'linear');
+	      styles.path.strokeDasharray = Math.round(relVal * 1.25) + ',200';
+	    }
+
+	    return styles;
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var style = _props.style;
+	    var innerStyle = _props.innerStyle;
+	    var size = _props.size;
+
+	    var other = _objectWithoutProperties(_props, ['style', 'innerStyle', 'size']);
+
+	    var styles = this.getStyles(size || 1);
+
+	    return _react2.default.createElement(
+	      'div',
+	      _extends({}, other, { style: this.prepareStyles(styles.root, style) }),
+	      _react2.default.createElement(
+	        'div',
+	        { ref: 'wrapper', style: this.prepareStyles(styles.wrapper, innerStyle) },
+	        _react2.default.createElement(
+	          'svg',
+	          { style: this.prepareStyles(styles.svg) },
+	          _react2.default.createElement('circle', {
+	            ref: 'path', style: this.prepareStyles(styles.path), cx: '25',
+	            cy: '25', r: '20', fill: 'none',
+	            strokeWidth: '2.5', strokeMiterlimit: '10'
+	          })
+	        )
+	      )
+	    );
+	  }
+	});
+
+	exports.default = CircularProgress;
+	module.exports = exports['default'];
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
 
 /***/ }
 /******/ ]);
