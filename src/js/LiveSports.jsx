@@ -38,34 +38,72 @@ let eventMap = {
     OUT: {
         label: 'Wicket',
         icon: 'http://www.nickjr.com/nickjr/buttons/alphabuttons/default-08-2015/icon-alpha-w-default-08-2015-2x.png'
+    },
+    EVERY_OVER: {
+        label: 'End of over',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/b/b0/Cricketball.png'
+    },
+    EVERY_BALL: {
+        label: 'Every ball',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/b/b0/Cricketball.png'
     }
 };
 
-function pushNotification(ball, content) {
+/**
+ * returns short form name, eg : MI v/s GL.
+ * @param content
+ * @returns {string}
+ */
+function getMatchHeaderDetails(content) {
+    let teamShortNames = [];
 
-    let that = this,
-        event = ball.event,
-        inningsDetails = content.live.innings,
+    _.forEach(content.team, (team) => {
+        teamShortNames.push(getTeamName(team));
+    });
+
+    this.matchHeader = teamShortNames.join(' v/s ');
+
+    return this.matchHeader;
+}
+
+function getTeamName(team) {
+    return team.team_abbreviation || team.team_short_name || team.team_name;
+}
+
+function getCurrentBattingTeamDetails(content) {
+    let inningsDetails = content.live.innings,
         battingTeamId = inningsDetails.batting_team_id,
         battingTeamDetails = _.filter(content.team, (team) => {
             return team.team_id === battingTeamId;
         })[0],
-        battingTeamName = battingTeamDetails.team_abbreviation || battingTeamDetails.team_short_name || battingTeamDetails.team_name,
-        score = inningsDetails.runs + '/' + inningsDetails.wickets + ' in ' + inningsDetails.overs,
-        eventDetails = eventMap[event],
+        battingTeamName = getTeamName(battingTeamDetails);
+
+    return battingTeamName + ' : ' + inningsDetails.runs + '/' + inningsDetails.wickets + ' in ' + inningsDetails.overs;
+}
+
+function pushNotification(ball, content, eventarg) {
+    let that = this,
+        event = eventarg || ball.event,
+        eventDetails = eventMap[event] || {},
+        icon = eventDetails.icon || 'https://upload.wikimedia.org/wikipedia/commons/b/b0/Cricketball.png',
+        label = eventDetails.label || event,
         body;
 
-    if (event === 'OUT') {
-        body = ball.dismissal;
-    } else {
-        body = ball.players + ', ' + eventDetails.label
+    switch (event) {
+        case 'EVERY_OVER':
+            body = 'Over complete. \n\n';
+            break;
+        default:
+            body = ball.players + ', ' + label;
     }
 
-    body += '\n\n' + battingTeamName + ' : ' + score;
+    (event === 'OUT') && (body += '\n' + ball.dismissal);
 
-    var notification = new Notification('Score Update', {
-        icon: eventDetails.icon,
-        body: body
+    body += '\n\n' + getCurrentBattingTeamDetails(content);
+
+    var notification = new Notification('Score Update ( ' + (that.matchHeader || getMatchHeaderDetails.call(that, content)) + ' )', {
+        icon,
+        body
     });
 
     window.setTimeout(() => {
@@ -89,6 +127,10 @@ function onStartClick(event, index, value) {
     _.keys(eventMap).forEach((key) => {
         refs[key].isToggled() && (selectedEvents[key] = 1);
     });
+
+    that.matchHeader = undefined;
+    that.previousOver = undefined;
+    that.previousBall = undefined;
 
     that.setState({selectedEvents: selectedEvents, start: true});
 }
@@ -189,19 +231,24 @@ class LiveSports extends Component {
                     $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/' + state.selectedMatch + '.json') + '&callback=?', function (data) {
 
                         let content = JSON.parse(data.contents),
-                            comms = content.comms,
-                            balls = comms[0].ball,
-                            iter = 0,
+                            overs = content.comms || [],
+                            currentOver = overs[0] || {},
+                            currentOverNo = currentOver.over_number,
+                            balls = currentOver.ball || [],
+                            currentBall = (balls[0] || {}).overs_unique,
+                            iter,
 
-                            previousBall = that.previousBall || balls[0].overs_unique,
-                            previousBallInnings = that.previousBallInnings || balls[0].previousBallInnings;
+                        //if no previous ball is set, set it as the current ball.
+                            previousBall = that.previousBall || currentBall,
+                            previousOver = that.previousOver || currentOverNo;
 
-                        that.previousBall = balls[0].overs_unique;
+                        that.previousBall = currentBall;
+                        that.previousOver = currentOverNo;
 
-                        for (iter = 0; iter < comms.length; iter++) {
-                            let over = comms[iter],
-                                balls = over.ball,
-                                j = 0;
+                        for (iter = 0; iter < overs.length; iter++) {
+                            let over = overs[iter],
+                                balls = over.ball || [],
+                                j;
 
                             for (j = 0; j < balls.length; j++) {
                                 let ball = balls[j];
@@ -209,9 +256,12 @@ class LiveSports extends Component {
                                 if (ball.overs_unique === previousBall) {
                                     return;
                                 }
+                                console.log(ball.overs_unique, ball.event);
 
-                                selectedEvents[ball.event] && pushNotification.call(that, ball, content);
-
+                                (selectedEvents['EVERY_BALL'] || selectedEvents[ball.event]) && pushNotification.call(that, ball, content);
+                                if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
+                                    pushNotification.call(that, ball, content, 'EVERY_OVER')
+                                }
                             }
                         }
                     });
@@ -219,15 +269,13 @@ class LiveSports extends Component {
             };
 
             intervalFunction();
-            that.intervalId = window.setInterval(intervalFunction, 15 * 1000);
+            that.intervalId = window.setInterval(intervalFunction, 30 * 1000);
         } else {
             window.clearInterval(that.intervalId)
         }
-        console.log('updated');
     }
 
     componentDidMount() {
-        let that = this;
 
         if (Notification.permission !== "granted") {
             Notification.requestPermission();
@@ -253,7 +301,6 @@ class LiveSports extends Component {
 
             this.setState({liveMatches, loading: false});
         });
-
     }
 }
 
