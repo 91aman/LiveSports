@@ -19705,6 +19705,10 @@
 
 	var _menuItem2 = _interopRequireDefault(_menuItem);
 
+	var _divider = __webpack_require__(297);
+
+	var _divider2 = _interopRequireDefault(_divider);
+
 	var _toggle = __webpack_require__(273);
 
 	var _toggle2 = _interopRequireDefault(_toggle);
@@ -19899,7 +19903,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LiveSports).call(this));
 
 	        _this.state = {
-	            liveMatches: [],
+	            liveMatches: {},
 	            selectedMatch: undefined,
 	            selectedEvents: {},
 	            start: undefined,
@@ -19918,10 +19922,19 @@
 	                selectedMatch = state.selectedMatch,
 	                start = state.start,
 	                matchOptionsEl = [],
-	                eventsOptionsEl = [];
+	                eventsOptionsEl = [],
+	                iter = 0;
 
-	            that.state.liveMatches.forEach(function (value) {
-	                matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: value.id, value: value.id, primaryText: value.text }));
+	            _lodash2.default.forEach(that.state.liveMatches, function (values, key) {
+
+	                iter && matchOptionsEl.push(_react2.default.createElement(_divider2.default, null));
+
+	                matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: key, value: key, primaryText: key, disabled: 'true' }));
+	                values.forEach(function (value) {
+	                    matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: value.id, value: value.id, primaryText: value.text,
+	                        secondaryText: value.secondaryText, insetChildren: 'true' }));
+	                });
+	                iter++;
 	            });
 
 	            _lodash2.default.forEach(eventMap, function (value, key) {
@@ -20093,21 +20106,33 @@
 	            }
 
 	            _jquery2.default.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', function (data) {
-	                var contentEl = (0, _jquery2.default)(data.contents),
-	                    liveMatches = [];
+	                var jDummy = (0, _jquery2.default)('<div class="dummy"></div>'),
+	                    contentEl = jDummy.closest('.dummy').html(data.contents),
+	                    sectionHeads = contentEl.find('.match-section-head'),
+	                    matchGroups = contentEl.find('.matches-day-block'),
+	                    liveMatches = {};
 
-	                contentEl.find('.default-match-block').each(function (iter, value) {
-	                    var matchEl = (0, _jquery2.default)(value),
-	                        matchHref = matchEl.find('a').attr('href'),
-	                        splitMatchHref = matchHref.split('.')[0].split('/'),
-	                        matchId = splitMatchHref[splitMatchHref.length - 1],
-	                        innings1 = matchEl.find('.innings-info-1').text(),
-	                        innings2 = matchEl.find('.innings-info-2').text();
+	                sectionHeads.each(function (iter, value) {
+	                    var matchGroup = (0, _jquery2.default)(matchGroups[iter]),
+	                        groupLabel = (0, _jquery2.default)(value).text(),
+	                        matchInGroup = [];
 
-	                    liveMatches.push({
-	                        id: matchId,
-	                        text: innings1 + ' v/s ' + innings2
+	                    matchGroup.find('.default-match-block').each(function (iter, value) {
+	                        var matchEl = (0, _jquery2.default)(value),
+	                            matchHref = matchEl.find('a').attr('href'),
+	                            splitMatchHref = matchHref.split('.')[0].split('/'),
+	                            matchId = splitMatchHref[splitMatchHref.length - 1],
+	                            innings1 = matchEl.find('.innings-info-1').text(),
+	                            innings2 = matchEl.find('.innings-info-2').text();
+
+	                        matchInGroup.push({
+	                            id: matchId,
+	                            text: innings1 + ' v/s ' + innings2,
+	                            secondaryText: matchEl.find('.match-info .bold').text()
+	                        });
 	                    });
+
+	                    liveMatches[groupLabel] = matchInGroup;
 	                });
 
 	                _this2.setState({ liveMatches: liveMatches, loading: false, showDetails: true });
@@ -35965,6 +35990,10 @@
 
 	var _flatButton2 = _interopRequireDefault(_flatButton);
 
+	var _raisedButton = __webpack_require__(275);
+
+	var _raisedButton2 = _interopRequireDefault(_raisedButton);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35997,13 +36026,14 @@
 	            var that = this,
 	                props = that.props;
 
-	            var actions = [_react2.default.createElement(_flatButton2.default, {
-	                label: 'SHOW ME',
+	            var actions = [_react2.default.createElement(_raisedButton2.default, {
+	                label: 'Show me',
 	                primary: true,
 	                keyboardFocused: true,
 	                onTouchTap: props.onClose,
 	                style: {
-	                    width: '125px'
+	                    width: '125px',
+	                    textTransform: 'none'
 	                }
 	            })];
 
@@ -36013,54 +36043,73 @@
 	                _react2.default.createElement(
 	                    _dialog2.default,
 	                    {
-	                        title: '',
+	                        title: 'Live Sports',
+	                        titleClassName: 'dm-title',
+	                        titleStyle: {
+	                            padding: "24px",
+	                            fontSize: "35px",
+	                            color: "white"
+	                        },
 	                        actions: actions,
+	                        actionsContainerStyle: {
+	                            background: '#3F51B5',
+	                            textAlign: 'centre'
+	                        },
 	                        modal: false,
 	                        open: props.open,
 	                        onRequestClose: props.onClose,
-	                        className: 'details-modal'
+	                        className: 'details-modal',
+	                        bodyStyle: {
+	                            padding: "40px 24px"
+	                        }
 	                    },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'details-modal-container' },
+	                        { className: 'dmc-body' },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'dmc-header' },
-	                            ' Live Sports'
+	                            { className: 'dmc-info-lines' },
+	                            _react2.default.createElement(
+	                                'i',
+	                                null,
+	                                '"Want to watch a cricket match, but stuck in work."',
+	                                _react2.default.createElement('br', null),
+	                                '"Afraid of seeing updates on Cricinfo, knowing that your boss might catch you."'
+	                            )
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'dmc-body' },
+	                            { className: 'dmc-no-worries' },
+	                            'No worries,'
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            null,
+	                            'If you are avid cricket fan and want to be updated about score with out compromising your work,',
+	                            _react2.default.createElement('br', null),
+	                            ' ',
 	                            _react2.default.createElement(
-	                                'div',
-	                                { className: 'dmc-info-lines' },
-	                                _react2.default.createElement(
-	                                    'i',
-	                                    null,
-	                                    '"Want to watch a cricket match, but stuck in work."',
-	                                    _react2.default.createElement('br', null),
-	                                    '"Afraid of seeing updates on Cricinfo, knowing that your boss might catch you."'
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'div',
-	                                { className: 'dmc-no-worries' },
-	                                'No worries,'
-	                            ),
-	                            _react2.default.createElement(
-	                                'div',
+	                                'i',
 	                                null,
-	                                'If you are avid cricket fan and want to be updated about score with out compromising your work,',
-	                                _react2.default.createElement('br', null),
-	                                ' ',
-	                                _react2.default.createElement(
-	                                    'i',
-	                                    null,
-	                                    '‘Live Sports’'
-	                                ),
-	                                ' is here for you.',
-	                                _react2.default.createElement('br', null),
-	                                'Now get notifications on each updates of the match you want.'
+	                                '‘Live Sports’'
+	                            ),
+	                            ' is here for you.',
+	                            _react2.default.createElement('br', null),
+	                            'Now get notifications on each updates of the match you want.'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'cricinfo-info' },
+	                        _react2.default.createElement(
+	                            'i',
+	                            null,
+	                            '* Live Updates are fetched from ',
+	                            _react2.default.createElement(
+	                                'a',
+	                                {
+	                                    href: 'http://www.espncricinfo.com/', target: '_black' },
+	                                'Cricinfo'
 	                            )
 	                        )
 	                    )
@@ -60127,7 +60176,7 @@
 
 
 	// module
-	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3F51B5; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3F51B5;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n\n.details-modal h3 {\n  padding: 0 !important; }\n\n.details-modal .details-modal-container {\n  text-align: center;\n  line-height: 1.5; }\n  .details-modal .details-modal-container .dmc-header {\n    font-size: 35px; }\n  .details-modal .details-modal-container .dmc-body {\n    margin: 30px 0; }\n  .details-modal .details-modal-container .dmc-no-worries {\n    margin: 20px 0;\n    font-size: 20px; }\n", ""]);
+	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3F51B5; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3F51B5;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n\n.details-modal {\n  text-align: center;\n  line-height: 1.5; }\n  .details-modal .dm-title {\n    font-size: 35px;\n    background: #3F51B5; }\n  .details-modal .dmc-body {\n    margin: 30px 0; }\n  .details-modal .dmc-no-worries {\n    margin: 20px 0;\n    font-size: 20px; }\n  .details-modal .cricinfo-info {\n    font-size: 10px; }\n", ""]);
 
 	// exports
 
@@ -60731,6 +60780,135 @@
 	};
 
 	module.exports = keyOf;
+
+/***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _muiThemeable = __webpack_require__(298);
+
+	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+
+	var _styles = __webpack_require__(163);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	var propTypes = {
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react2.default.PropTypes.string,
+
+	  /**
+	   * If true, the `Divider` will be indented `72px`.
+	   */
+	  inset: _react2.default.PropTypes.bool,
+
+	  /**
+	   * The material-ui theme applied to this component.
+	   * @ignore
+	   */
+	  muiTheme: _react2.default.PropTypes.object.isRequired,
+
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react2.default.PropTypes.object
+	};
+
+	var defaultProps = {
+	  inset: false
+	};
+
+	var Divider = function Divider(props) {
+	  var inset = props.inset;
+	  var muiTheme = props.muiTheme;
+	  var style = props.style;
+
+	  var other = _objectWithoutProperties(props, ['inset', 'muiTheme', 'style']);
+
+	  var styles = {
+	    root: {
+	      margin: 0,
+	      marginTop: -1,
+	      marginLeft: inset ? 72 : 0,
+	      height: 1,
+	      border: 'none',
+	      backgroundColor: muiTheme.rawTheme.palette.borderColor
+	    }
+	  };
+
+	  return _react2.default.createElement('hr', _extends({}, other, { style: (0, _styles.prepareStyles)(muiTheme, (0, _styles.mergeStyles)(styles.root, style)) }));
+	};
+
+	Divider.displayName = 'Divider';
+	Divider.propTypes = propTypes;
+	Divider.defaultProps = defaultProps;
+	Divider = (0, _muiThemeable2.default)(Divider);
+
+	exports.default = Divider;
+	module.exports = exports['default'];
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = muiThemeable;
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getDisplayName(WrappedComponent) {
+	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+
+	function muiThemeable(WrappedComponent) {
+	  var MuiComponent = function MuiComponent(props, _ref) {
+	    var _ref$muiTheme = _ref.muiTheme;
+	    var muiTheme = _ref$muiTheme === undefined ? (0, _getMuiTheme2.default)() : _ref$muiTheme;
+
+	    return _react2.default.createElement(WrappedComponent, _extends({}, props, { muiTheme: muiTheme }));
+	  };
+
+	  MuiComponent.displayName = getDisplayName(WrappedComponent);
+	  MuiComponent.contextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+	  MuiComponent.childContextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+
+	  return MuiComponent;
+	}
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
