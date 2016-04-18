@@ -93,7 +93,7 @@ function pushNotification(ball, content, eventarg) {
 
     switch (event) {
         case 'EVERY_OVER':
-            body = 'Over complete. \n\n';
+            body = 'Over complete.';
             break;
         default:
             body = ball.overs_actual + ', ' + ball.players + ', ' + label;
@@ -192,6 +192,7 @@ class LiveSports extends Component {
                     ref={key}
                     label={value.label}
                     className="notificationSelector"
+                    disabled={state.start}
                 />)
             }
         });
@@ -216,6 +217,7 @@ class LiveSports extends Component {
                     <div className="control-group">
                         <SelectField ref="matchSelectEl" className="controls" value={selectedMatch}
                                      onChange={onMatchChange.bind(this)}
+                                     disabled={state.start}
                                      floatingLabelText="Select Match" style={{
                                  width: '750px',
                                  margin :'auto',
@@ -233,6 +235,7 @@ class LiveSports extends Component {
                     <div className="start-btn">
                         <RaisedButton label={start ? "Stop" : "Start"} primary={true}
                                       onClick={(start ? onStopClick : onStartClick).bind(this)}
+                                      disabled={!state.selectedMatch}
                                       style={ {margin: 'auto'}}/>
                     </div>
 
@@ -287,9 +290,10 @@ class LiveSports extends Component {
                                     console.log(ball.overs_unique, ball.event);
 
                                     (selectedEvents['EVERY_BALL'] || selectedEvents[ball.event]) && pushNotification.call(that, ball, content);
-                                    if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
-                                        pushNotification.call(that, ball, content, 'EVERY_OVER')
-                                    }
+                                }
+
+                                if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
+                                    pushNotification.call(that, ball, content, 'EVERY_OVER')
                                 }
                             }
                         });
