@@ -30,7 +30,7 @@ class DetailsModal extends Component {
                 keyboardFocused={true}
                 onTouchTap={props.onClose}
                 style={{
-        width: '150px'
+        width: '125px'
     }}
             />
         ];
