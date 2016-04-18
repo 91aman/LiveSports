@@ -84,7 +84,7 @@ function getCurrentBattingTeamDetails(content) {
     return battingTeamName + ' : ' + inningsDetails.runs + '/' + inningsDetails.wickets + ' in ' + inningsDetails.overs;
 }
 
-function pushNotification(ball, content, eventarg) {
+function pushNotification(ball = {}, content, eventarg) {
     let that = this,
         event = eventarg || ball.event,
         eventDetails = eventMap[event] || {},
@@ -111,7 +111,7 @@ function pushNotification(ball, content, eventarg) {
 
     window.setTimeout(() => {
         notification.close()
-    }, 5000);
+    }, 10000);
 
     notification.onclick = function () {
         window.open("http://www.espncricinfo.com/ci/engine/match/" + that.state.selectedMatch + ".html");
@@ -185,12 +185,12 @@ class LiveSports extends Component {
 
         _.forEach(that.state.liveMatches, (values, key) => {
 
-            iter && matchOptionsEl.push(<Divider />);
+            iter && matchOptionsEl.push(<Divider key={iter} />);
 
-            matchOptionsEl.push(<MenuItem key={key} value={key} primaryText={key} disabled="true"></MenuItem>);
+            matchOptionsEl.push(<MenuItem key={key} value={key} primaryText={key} disabled={true}></MenuItem>);
             values.forEach((value) => {
                 matchOptionsEl.push(<MenuItem key={value.id} value={value.id} primaryText={value.text}
-                                              secondaryText={value.secondaryText} insetChildren="true"></MenuItem>)
+                                              secondaryText={value.secondaryText} insetChildren={true}></MenuItem>)
             });
             iter++;
         });
@@ -303,7 +303,7 @@ class LiveSports extends Component {
                                 }
 
                                 if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
-                                    pushNotification.call(that, ball, content, 'EVERY_OVER')
+                                    pushNotification.call(that, {}, content, 'EVERY_OVER')
                                 }
                             }
                         });
