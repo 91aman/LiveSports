@@ -58,17 +58,17 @@
 
 	var _LiveSports2 = _interopRequireDefault(_LiveSports);
 
-	var _lodash = __webpack_require__(286);
+	var _lodash = __webpack_require__(288);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _main = __webpack_require__(288);
+	var _main = __webpack_require__(290);
 
 	var _main2 = _interopRequireDefault(_main);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var injectTapEventPlugin = __webpack_require__(292); /**
+	var injectTapEventPlugin = __webpack_require__(294); /**
 	                                                               * Created by amanjain on 14/04/16 at 3:12 PM.
 	                                                               * Description :
 	                                                               */
@@ -19705,39 +19705,39 @@
 
 	var _menuItem2 = _interopRequireDefault(_menuItem);
 
-	var _divider = __webpack_require__(297);
+	var _divider = __webpack_require__(273);
 
 	var _divider2 = _interopRequireDefault(_divider);
 
-	var _toggle = __webpack_require__(273);
+	var _toggle = __webpack_require__(275);
 
 	var _toggle2 = _interopRequireDefault(_toggle);
 
-	var _raisedButton = __webpack_require__(275);
+	var _raisedButton = __webpack_require__(277);
 
 	var _raisedButton2 = _interopRequireDefault(_raisedButton);
 
-	var _circularProgress = __webpack_require__(276);
+	var _circularProgress = __webpack_require__(278);
 
 	var _circularProgress2 = _interopRequireDefault(_circularProgress);
 
-	var _main = __webpack_require__(277);
+	var _main = __webpack_require__(279);
 
 	var _main2 = _interopRequireDefault(_main);
 
-	var _snackbar = __webpack_require__(283);
+	var _snackbar = __webpack_require__(285);
 
 	var _snackbar2 = _interopRequireDefault(_snackbar);
 
-	var _classnames = __webpack_require__(285);
+	var _classnames = __webpack_require__(287);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _jquery = __webpack_require__(278);
+	var _jquery = __webpack_require__(280);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _lodash = __webpack_require__(286);
+	var _lodash = __webpack_require__(288);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -19819,7 +19819,11 @@
 	    return battingTeamName + ' : ' + inningsDetails.runs + '/' + inningsDetails.wickets + ' in ' + inningsDetails.overs;
 	}
 
-	function pushNotification(ball, content, eventarg) {
+	function pushNotification() {
+	    var ball = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var content = arguments[1];
+	    var eventarg = arguments[2];
+
 	    var that = this,
 	        event = eventarg || ball.event,
 	        eventDetails = eventMap[event] || {},
@@ -19846,7 +19850,7 @@
 
 	    window.setTimeout(function () {
 	        notification.close();
-	    }, 5000);
+	    }, 10000);
 
 	    notification.onclick = function () {
 	        window.open("http://www.espncricinfo.com/ci/engine/match/" + that.state.selectedMatch + ".html");
@@ -19927,12 +19931,12 @@
 
 	            _lodash2.default.forEach(that.state.liveMatches, function (values, key) {
 
-	                iter && matchOptionsEl.push(_react2.default.createElement(_divider2.default, null));
+	                iter && matchOptionsEl.push(_react2.default.createElement(_divider2.default, { key: iter }));
 
-	                matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: key, value: key, primaryText: key, disabled: 'true' }));
+	                matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: key, value: key, primaryText: key, disabled: true }));
 	                values.forEach(function (value) {
 	                    matchOptionsEl.push(_react2.default.createElement(_menuItem2.default, { key: value.id, value: value.id, primaryText: value.text,
-	                        secondaryText: value.secondaryText, insetChildren: 'true' }));
+	                        secondaryText: value.secondaryText, insetChildren: true }));
 	                });
 	                iter++;
 	            });
@@ -20070,18 +20074,18 @@
 	                                        j = void 0;
 
 	                                    for (j = 0; j < _balls.length; j++) {
-	                                        var _ball = _balls[j];
+	                                        var ball = _balls[j];
 
-	                                        if (_ball.overs_unique === previousBall) {
+	                                        if (ball.overs_unique === previousBall) {
 	                                            return;
 	                                        }
-	                                        console.log(_ball.overs_unique, _ball.event);
+	                                        console.log(ball.overs_unique, ball.event);
 
-	                                        (selectedEvents['EVERY_BALL'] || selectedEvents[_ball.event]) && pushNotification.call(that, _ball, content);
+	                                        (selectedEvents['EVERY_BALL'] || selectedEvents[ball.event]) && pushNotification.call(that, ball, content);
 	                                    }
 
 	                                    if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
-	                                        pushNotification.call(that, ball, content, 'EVERY_OVER');
+	                                        pushNotification.call(that, {}, content, 'EVERY_OVER');
 	                                    }
 	                                }
 	                            });
@@ -34502,6 +34506,135 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _muiThemeable = __webpack_require__(274);
+
+	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+
+	var _styles = __webpack_require__(163);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	var propTypes = {
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react2.default.PropTypes.string,
+
+	  /**
+	   * If true, the `Divider` will be indented `72px`.
+	   */
+	  inset: _react2.default.PropTypes.bool,
+
+	  /**
+	   * The material-ui theme applied to this component.
+	   * @ignore
+	   */
+	  muiTheme: _react2.default.PropTypes.object.isRequired,
+
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react2.default.PropTypes.object
+	};
+
+	var defaultProps = {
+	  inset: false
+	};
+
+	var Divider = function Divider(props) {
+	  var inset = props.inset;
+	  var muiTheme = props.muiTheme;
+	  var style = props.style;
+
+	  var other = _objectWithoutProperties(props, ['inset', 'muiTheme', 'style']);
+
+	  var styles = {
+	    root: {
+	      margin: 0,
+	      marginTop: -1,
+	      marginLeft: inset ? 72 : 0,
+	      height: 1,
+	      border: 'none',
+	      backgroundColor: muiTheme.rawTheme.palette.borderColor
+	    }
+	  };
+
+	  return _react2.default.createElement('hr', _extends({}, other, { style: (0, _styles.prepareStyles)(muiTheme, (0, _styles.mergeStyles)(styles.root, style)) }));
+	};
+
+	Divider.displayName = 'Divider';
+	Divider.propTypes = propTypes;
+	Divider.defaultProps = defaultProps;
+	Divider = (0, _muiThemeable2.default)(Divider);
+
+	exports.default = Divider;
+	module.exports = exports['default'];
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = muiThemeable;
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getDisplayName(WrappedComponent) {
+	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+
+	function muiThemeable(WrappedComponent) {
+	  var MuiComponent = function MuiComponent(props, _ref) {
+	    var _ref$muiTheme = _ref.muiTheme;
+	    var muiTheme = _ref$muiTheme === undefined ? (0, _getMuiTheme2.default)() : _ref$muiTheme;
+
+	    return _react2.default.createElement(WrappedComponent, _extends({}, props, { muiTheme: muiTheme }));
+	  };
+
+	  MuiComponent.displayName = getDisplayName(WrappedComponent);
+	  MuiComponent.contextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+	  MuiComponent.childContextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+
+	  return MuiComponent;
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _stylePropable = __webpack_require__(162);
 
 	var _stylePropable2 = _interopRequireDefault(_stylePropable);
@@ -34514,7 +34647,7 @@
 
 	var _paper2 = _interopRequireDefault(_paper);
 
-	var _enhancedSwitch = __webpack_require__(274);
+	var _enhancedSwitch = __webpack_require__(276);
 
 	var _enhancedSwitch2 = _interopRequireDefault(_enhancedSwitch);
 
@@ -34760,7 +34893,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 274 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -35240,7 +35373,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 275 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35688,7 +35821,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 276 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35963,7 +36096,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 277 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35978,19 +36111,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jquery = __webpack_require__(278);
+	var _jquery = __webpack_require__(280);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _dialog = __webpack_require__(279);
+	var _dialog = __webpack_require__(281);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _flatButton = __webpack_require__(280);
+	var _flatButton = __webpack_require__(282);
 
 	var _flatButton2 = _interopRequireDefault(_flatButton);
 
-	var _raisedButton = __webpack_require__(275);
+	var _raisedButton = __webpack_require__(277);
 
 	var _raisedButton2 = _interopRequireDefault(_raisedButton);
 
@@ -36124,7 +36257,7 @@
 	exports.default = DetailsModal;
 
 /***/ },
-/* 278 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -45972,7 +46105,7 @@
 
 
 /***/ },
-/* 279 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -46007,11 +46140,11 @@
 
 	var _stylePropable2 = _interopRequireDefault(_stylePropable);
 
-	var _flatButton = __webpack_require__(280);
+	var _flatButton = __webpack_require__(282);
 
 	var _flatButton2 = _interopRequireDefault(_flatButton);
 
-	var _overlay = __webpack_require__(282);
+	var _overlay = __webpack_require__(284);
 
 	var _overlay2 = _interopRequireDefault(_overlay);
 
@@ -46628,7 +46761,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 280 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46669,7 +46802,7 @@
 
 	var _enhancedButton2 = _interopRequireDefault(_enhancedButton);
 
-	var _flatButtonLabel = __webpack_require__(281);
+	var _flatButtonLabel = __webpack_require__(283);
 
 	var _flatButtonLabel2 = _interopRequireDefault(_flatButtonLabel);
 
@@ -46986,7 +47119,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 281 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47088,7 +47221,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 282 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47233,7 +47366,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 283 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -47260,7 +47393,7 @@
 
 	var _clickAwayable2 = _interopRequireDefault(_clickAwayable);
 
-	var _flatButton = __webpack_require__(280);
+	var _flatButton = __webpack_require__(282);
 
 	var _flatButton2 = _interopRequireDefault(_flatButton);
 
@@ -47272,7 +47405,7 @@
 
 	var _contextPure2 = _interopRequireDefault(_contextPure);
 
-	var _styleResizable = __webpack_require__(284);
+	var _styleResizable = __webpack_require__(286);
 
 	var _styleResizable2 = _interopRequireDefault(_styleResizable);
 
@@ -47650,7 +47783,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 284 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47714,7 +47847,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 285 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -47768,7 +47901,7 @@
 
 
 /***/ },
-/* 286 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -60123,10 +60256,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(287)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(289)(module), (function() { return this; }())))
 
 /***/ },
-/* 287 */
+/* 289 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -60142,16 +60275,16 @@
 
 
 /***/ },
-/* 288 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(289);
+	var content = __webpack_require__(291);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(291)(content, {});
+	var update = __webpack_require__(293)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -60168,10 +60301,10 @@
 	}
 
 /***/ },
-/* 289 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(290)();
+	exports = module.exports = __webpack_require__(292)();
 	// imports
 
 
@@ -60182,7 +60315,7 @@
 
 
 /***/ },
-/* 290 */
+/* 292 */
 /***/ function(module, exports) {
 
 	/*
@@ -60238,7 +60371,7 @@
 
 
 /***/ },
-/* 291 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -60490,23 +60623,23 @@
 
 
 /***/ },
-/* 292 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var defaultClickRejectionStrategy = __webpack_require__(293);
+	var defaultClickRejectionStrategy = __webpack_require__(295);
 
 	module.exports = function injectTapEventPlugin (strategyOverrides) {
 	  strategyOverrides = strategyOverrides || {}
 	  var shouldRejectClick = strategyOverrides.shouldRejectClick || defaultClickRejectionStrategy;
 
 	  __webpack_require__(31).injection.injectEventPluginsByName({
-	    "TapEventPlugin":       __webpack_require__(294)(shouldRejectClick)
+	    "TapEventPlugin":       __webpack_require__(296)(shouldRejectClick)
 	  });
 	};
 
 
 /***/ },
-/* 293 */
+/* 295 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -60517,7 +60650,7 @@
 
 
 /***/ },
-/* 294 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -60545,10 +60678,10 @@
 	var EventPluginUtils = __webpack_require__(33);
 	var EventPropagators = __webpack_require__(73);
 	var SyntheticUIEvent = __webpack_require__(87);
-	var TouchEventUtils = __webpack_require__(295);
+	var TouchEventUtils = __webpack_require__(297);
 	var ViewportMetrics = __webpack_require__(38);
 
-	var keyOf = __webpack_require__(296);
+	var keyOf = __webpack_require__(298);
 	var topLevelTypes = EventConstants.topLevelTypes;
 
 	var isStartish = EventPluginUtils.isStartish;
@@ -60694,7 +60827,7 @@
 
 
 /***/ },
-/* 295 */
+/* 297 */
 /***/ function(module, exports) {
 
 	/**
@@ -60742,7 +60875,7 @@
 
 
 /***/ },
-/* 296 */
+/* 298 */
 /***/ function(module, exports) {
 
 	/**
@@ -60780,135 +60913,6 @@
 	};
 
 	module.exports = keyOf;
-
-/***/ },
-/* 297 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _muiThemeable = __webpack_require__(298);
-
-	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
-
-	var _styles = __webpack_require__(163);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	var propTypes = {
-	  /**
-	   * The css class name of the root element.
-	   */
-	  className: _react2.default.PropTypes.string,
-
-	  /**
-	   * If true, the `Divider` will be indented `72px`.
-	   */
-	  inset: _react2.default.PropTypes.bool,
-
-	  /**
-	   * The material-ui theme applied to this component.
-	   * @ignore
-	   */
-	  muiTheme: _react2.default.PropTypes.object.isRequired,
-
-	  /**
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react2.default.PropTypes.object
-	};
-
-	var defaultProps = {
-	  inset: false
-	};
-
-	var Divider = function Divider(props) {
-	  var inset = props.inset;
-	  var muiTheme = props.muiTheme;
-	  var style = props.style;
-
-	  var other = _objectWithoutProperties(props, ['inset', 'muiTheme', 'style']);
-
-	  var styles = {
-	    root: {
-	      margin: 0,
-	      marginTop: -1,
-	      marginLeft: inset ? 72 : 0,
-	      height: 1,
-	      border: 'none',
-	      backgroundColor: muiTheme.rawTheme.palette.borderColor
-	    }
-	  };
-
-	  return _react2.default.createElement('hr', _extends({}, other, { style: (0, _styles.prepareStyles)(muiTheme, (0, _styles.mergeStyles)(styles.root, style)) }));
-	};
-
-	Divider.displayName = 'Divider';
-	Divider.propTypes = propTypes;
-	Divider.defaultProps = defaultProps;
-	Divider = (0, _muiThemeable2.default)(Divider);
-
-	exports.default = Divider;
-	module.exports = exports['default'];
-
-/***/ },
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = muiThemeable;
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _getMuiTheme = __webpack_require__(193);
-
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getDisplayName(WrappedComponent) {
-	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-	}
-
-	function muiThemeable(WrappedComponent) {
-	  var MuiComponent = function MuiComponent(props, _ref) {
-	    var _ref$muiTheme = _ref.muiTheme;
-	    var muiTheme = _ref$muiTheme === undefined ? (0, _getMuiTheme2.default)() : _ref$muiTheme;
-
-	    return _react2.default.createElement(WrappedComponent, _extends({}, props, { muiTheme: muiTheme }));
-	  };
-
-	  MuiComponent.displayName = getDisplayName(WrappedComponent);
-	  MuiComponent.contextTypes = {
-	    muiTheme: _react2.default.PropTypes.object
-	  };
-	  MuiComponent.childContextTypes = {
-	    muiTheme: _react2.default.PropTypes.object
-	  };
-
-	  return MuiComponent;
-	}
-	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
