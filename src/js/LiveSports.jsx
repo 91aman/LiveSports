@@ -6,6 +6,7 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/lib/SelectField';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import Divider from 'material-ui/lib/divider';
 import Toggle from 'material-ui/lib/toggle';
 import RaisedButton from 'material-ui/lib/raised-button';
 import CircularProgress from 'material-ui/lib/circular-progress';
@@ -163,7 +164,7 @@ class LiveSports extends Component {
     constructor() {
         super();
         this.state = {
-            liveMatches: [],
+            liveMatches: {},
             selectedMatch: undefined,
             selectedEvents: {},
             start: undefined,
@@ -179,10 +180,19 @@ class LiveSports extends Component {
             selectedMatch = state.selectedMatch,
             start = state.start,
             matchOptionsEl = [],
-            eventsOptionsEl = [];
+            eventsOptionsEl = [],
+            iter = 0;
 
-        that.state.liveMatches.forEach((value) => {
-            matchOptionsEl.push(<MenuItem key={value.id} value={value.id} primaryText={value.text}></MenuItem>)
+        _.forEach(that.state.liveMatches, (values, key) => {
+
+            iter && matchOptionsEl.push(<Divider />);
+
+            matchOptionsEl.push(<MenuItem key={key} value={key} primaryText={key} disabled="true"></MenuItem>);
+            values.forEach((value) => {
+                matchOptionsEl.push(<MenuItem key={value.id} value={value.id} primaryText={value.text}
+                                              secondaryText={value.secondaryText} insetChildren="true"></MenuItem>)
+            });
+            iter++;
         });
 
         _.forEach(eventMap, (value, key)=> {
@@ -316,21 +326,33 @@ class LiveSports extends Component {
         }
 
         $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', (data) => {
-            let contentEl = $(data.contents),
-                liveMatches = [];
+            let jDummy = $('<div class="dummy"></div>'),
+                contentEl = jDummy.closest('.dummy').html(data.contents),
+                sectionHeads = contentEl.find('.match-section-head'),
+                matchGroups = contentEl.find('.matches-day-block'),
+                liveMatches = {};
 
-            contentEl.find('.default-match-block').each((iter, value)=> {
-                let matchEl = $(value),
-                    matchHref = matchEl.find('a').attr('href'),
-                    splitMatchHref = matchHref.split('.')[0].split('/'),
-                    matchId = splitMatchHref[splitMatchHref.length - 1],
-                    innings1 = matchEl.find('.innings-info-1').text(),
-                    innings2 = matchEl.find('.innings-info-2').text();
+            sectionHeads.each((iter, value) => {
+                let matchGroup = $(matchGroups[iter]),
+                    groupLabel = $(value).text(),
+                    matchInGroup = [];
 
-                liveMatches.push({
-                    id: matchId,
-                    text: innings1 + ' v/s ' + innings2
+                matchGroup.find('.default-match-block').each((iter, value)=> {
+                    let matchEl = $(value),
+                        matchHref = matchEl.find('a').attr('href'),
+                        splitMatchHref = matchHref.split('.')[0].split('/'),
+                        matchId = splitMatchHref[splitMatchHref.length - 1],
+                        innings1 = matchEl.find('.innings-info-1').text(),
+                        innings2 = matchEl.find('.innings-info-2').text();
+
+                    matchInGroup.push({
+                        id: matchId,
+                        text: innings1 + ' v/s ' + innings2,
+                        secondaryText: matchEl.find('.match-info .bold').text()
+                    });
                 });
+
+                liveMatches[groupLabel] = matchInGroup;
             });
 
             this.setState({liveMatches, loading: false, showDetails: true});

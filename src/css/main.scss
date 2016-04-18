@@ -2,21 +2,21 @@ html, body {
   height: 100%;
 }
 
-.overlay{
-  position:absolute;
-  height:100%;
-  width:100%;
-  top:0;
-  left:0;
-  background: rgba(0,0,0,0.4);
+.overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1;
   text-align: center;
 
-  &.hide{
+  &.hide {
     display: none;
   }
 
-  .overlay-icon{
+  .overlay-icon {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -86,40 +86,40 @@ body {
   }
 }
 
-.notificationSelector{
-  width:250px !important;
+.notificationSelector {
+  width: 250px !important;
   margin-bottom: 16px;
-  float:left;
+  float: left;
 
-  &:nth-child(odd){
-    margin-right:250px;
+  &:nth-child(odd) {
+    margin-right: 250px;
   }
 }
 
 .start-btn {
   text-align: center;
 }
-.details-modal{
-  h3{
-    padding: 0 !important;
+
+.details-modal {
+  text-align: center;
+  line-height: 1.5;
+
+  .dm-title {
+    font-size: 35px;
+    background: #3F51B5;
   }
 
-  .details-modal-container{
-    text-align: center;
-    line-height:1.5;
+  .dmc-body {
+    margin: 30px 0;
+  }
 
-    .dmc-header{
-      font-size: 35px;
-    }
+  .dmc-no-worries {
+    margin: 20px 0;
+    font-size: 20px;
+  }
 
-    .dmc-body{
-      margin: 30px 0;
-    }
-
-    .dmc-no-worries{
-      margin: 20px 0;
-      font-size: 20px;
-    }
+  .cricinfo-info{
+    font-size: 10px;
   }
 }
 
