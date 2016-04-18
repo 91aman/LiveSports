@@ -58,17 +58,17 @@
 
 	var _LiveSports2 = _interopRequireDefault(_LiveSports);
 
-	var _lodash = __webpack_require__(280);
+	var _lodash = __webpack_require__(286);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _main = __webpack_require__(286);
+	var _main = __webpack_require__(288);
 
 	var _main2 = _interopRequireDefault(_main);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var injectTapEventPlugin = __webpack_require__(290); /**
+	var injectTapEventPlugin = __webpack_require__(292); /**
 	                                                               * Created by amanjain on 14/04/16 at 3:12 PM.
 	                                                               * Description :
 	                                                               */
@@ -19721,19 +19721,19 @@
 
 	var _main2 = _interopRequireDefault(_main);
 
-	var _snackbar = __webpack_require__(295);
+	var _snackbar = __webpack_require__(283);
 
 	var _snackbar2 = _interopRequireDefault(_snackbar);
 
-	var _classnames = __webpack_require__(278);
+	var _classnames = __webpack_require__(285);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _jquery = __webpack_require__(279);
+	var _jquery = __webpack_require__(278);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _lodash = __webpack_require__(280);
+	var _lodash = __webpack_require__(286);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -19825,7 +19825,7 @@
 
 	    switch (event) {
 	        case 'EVERY_OVER':
-	            body = 'Over complete. \n\n';
+	            body = 'Over complete.';
 	            break;
 	        default:
 	            body = ball.overs_actual + ', ' + ball.players + ', ' + label;
@@ -19930,7 +19930,8 @@
 	                        key: key,
 	                        ref: key,
 	                        label: value.label,
-	                        className: 'notificationSelector'
+	                        className: 'notificationSelector',
+	                        disabled: state.start
 	                    }));
 	                }
 	            });
@@ -19967,6 +19968,7 @@
 	                            _SelectField2.default,
 	                            { ref: 'matchSelectEl', className: 'controls', value: selectedMatch,
 	                                onChange: onMatchChange.bind(this),
+	                                disabled: state.start,
 	                                floatingLabelText: 'Select Match', style: {
 	                                    width: '750px',
 	                                    margin: 'auto',
@@ -19994,6 +19996,7 @@
 	                        { className: 'start-btn' },
 	                        _react2.default.createElement(_raisedButton2.default, { label: start ? "Stop" : "Start", primary: true,
 	                            onClick: (start ? onStopClick : onStartClick).bind(this),
+	                            disabled: !state.selectedMatch,
 	                            style: { margin: 'auto' } })
 	                    )
 	                ),
@@ -20054,17 +20057,18 @@
 	                                        j = void 0;
 
 	                                    for (j = 0; j < _balls.length; j++) {
-	                                        var ball = _balls[j];
+	                                        var _ball = _balls[j];
 
-	                                        if (ball.overs_unique === previousBall) {
+	                                        if (_ball.overs_unique === previousBall) {
 	                                            return;
 	                                        }
-	                                        console.log(ball.overs_unique, ball.event);
+	                                        console.log(_ball.overs_unique, _ball.event);
 
-	                                        (selectedEvents['EVERY_BALL'] || selectedEvents[ball.event]) && pushNotification.call(that, ball, content);
-	                                        if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
-	                                            pushNotification.call(that, ball, content, 'EVERY_OVER');
-	                                        }
+	                                        (selectedEvents['EVERY_BALL'] || selectedEvents[_ball.event]) && pushNotification.call(that, _ball, content);
+	                                    }
+
+	                                    if (selectedEvents['EVERY_OVER'] && currentOverNo != previousOver) {
+	                                        pushNotification.call(that, ball, content, 'EVERY_OVER');
 	                                    }
 	                                }
 	                            });
@@ -35949,15 +35953,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jquery = __webpack_require__(279);
+	var _jquery = __webpack_require__(278);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _dialog = __webpack_require__(282);
+	var _dialog = __webpack_require__(279);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _flatButton = __webpack_require__(283);
+	var _flatButton = __webpack_require__(280);
 
 	var _flatButton2 = _interopRequireDefault(_flatButton);
 
@@ -36072,60 +36076,6 @@
 
 /***/ },
 /* 278 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames () {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg;
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
-
-/***/ },
-/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -45973,7 +45923,1803 @@
 
 
 /***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _windowListenable = __webpack_require__(245);
+
+	var _windowListenable2 = _interopRequireDefault(_windowListenable);
+
+	var _keyCode = __webpack_require__(238);
+
+	var _keyCode2 = _interopRequireDefault(_keyCode);
+
+	var _transitions = __webpack_require__(190);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _stylePropable = __webpack_require__(162);
+
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
+
+	var _flatButton = __webpack_require__(280);
+
+	var _flatButton2 = _interopRequireDefault(_flatButton);
+
+	var _overlay = __webpack_require__(282);
+
+	var _overlay2 = _interopRequireDefault(_overlay);
+
+	var _renderToLayer = __webpack_require__(246);
+
+	var _renderToLayer2 = _interopRequireDefault(_renderToLayer);
+
+	var _paper = __webpack_require__(242);
+
+	var _paper2 = _interopRequireDefault(_paper);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	var _warning = __webpack_require__(183);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _deprecatedPropType = __webpack_require__(272);
+
+	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
+
+	var _reactAddonsTransitionGroup = __webpack_require__(258);
+
+	var _reactAddonsTransitionGroup2 = _interopRequireDefault(_reactAddonsTransitionGroup);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	var TransitionItem = _react2.default.createClass({
+	  displayName: 'TransitionItem',
+
+	  propTypes: {
+	    children: _react2.default.PropTypes.node,
+	    style: _react2.default.PropTypes.object
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_stylePropable2.default],
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      style: {},
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+
+	  //to update theme inside state whenever a new theme is passed down
+	  //from the parent / owner using context
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+	  componentWillEnter: function componentWillEnter(callback) {
+	    this.componentWillAppear(callback);
+	  },
+	  componentWillAppear: function componentWillAppear(callback) {
+	    var spacing = this.state.muiTheme.rawTheme.spacing;
+
+	    this.setState({
+	      style: {
+	        opacity: 1,
+	        transform: 'translate3d(0, ' + spacing.desktopKeylineIncrement + 'px, 0)'
+	      }
+	    });
+
+	    setTimeout(callback, 450); // matches transition duration
+	  },
+	  componentWillLeave: function componentWillLeave(callback) {
+	    var _this = this;
+
+	    this.setState({
+	      style: {
+	        opacity: 0,
+	        transform: 'translate3d(0, 0, 0)'
+	      }
+	    });
+
+	    setTimeout(function () {
+	      if (_this.isMounted()) callback();
+	    }, 450); // matches transition duration
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var style = _props.style;
+	    var children = _props.children;
+
+	    var other = _objectWithoutProperties(_props, ['style', 'children']);
+
+	    return _react2.default.createElement(
+	      'div',
+	      _extends({}, other, { style: this.prepareStyles(this.state.style, style) }),
+	      children
+	    );
+	  }
+	});
+
+	var DialogInline = _react2.default.createClass({
+	  displayName: 'DialogInline',
+
+	  propTypes: {
+	    actionFocus: _react2.default.PropTypes.string,
+	    actions: _react2.default.PropTypes.node,
+	    actionsContainerClassName: _react2.default.PropTypes.string,
+	    actionsContainerStyle: _react2.default.PropTypes.object,
+	    autoDetectWindowHeight: _react2.default.PropTypes.bool,
+	    autoScrollBodyContent: _react2.default.PropTypes.bool,
+	    bodyClassName: _react2.default.PropTypes.string,
+	    bodyStyle: _react2.default.PropTypes.object,
+	    children: _react2.default.PropTypes.node,
+	    className: _react2.default.PropTypes.string,
+	    contentClassName: _react2.default.PropTypes.string,
+	    contentStyle: _react2.default.PropTypes.object,
+	    modal: _react2.default.PropTypes.bool,
+	    onRequestClose: _react2.default.PropTypes.func,
+	    open: _react2.default.PropTypes.bool.isRequired,
+	    overlayClassName: _react2.default.PropTypes.string,
+	    overlayStyle: _react2.default.PropTypes.object,
+	    repositionOnUpdate: _react2.default.PropTypes.bool,
+	    style: _react2.default.PropTypes.object,
+	    title: _react2.default.PropTypes.node,
+	    titleClassName: _react2.default.PropTypes.string,
+	    titleStyle: _react2.default.PropTypes.object,
+	    width: _react2.default.PropTypes.any
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_windowListenable2.default, _stylePropable2.default],
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this._positionDialog();
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+	  componentDidUpdate: function componentDidUpdate() {
+	    this._positionDialog();
+	  },
+
+	  windowListeners: {
+	    keyup: '_handleWindowKeyUp',
+	    resize: '_handleResize'
+	  },
+
+	  getStyles: function getStyles() {
+	    var _props2 = this.props;
+	    var autoScrollBodyContent = _props2.autoScrollBodyContent;
+	    var open = _props2.open;
+	    var width = _props2.width;
+
+	    var muiTheme = this.state.muiTheme;
+	    var rawTheme = muiTheme.rawTheme;
+	    var spacing = rawTheme.spacing;
+	    var gutter = spacing.desktopGutter;
+
+	    return {
+	      root: {
+	        position: 'fixed',
+	        boxSizing: 'border-box',
+	        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+	        zIndex: muiTheme.zIndex.dialog,
+	        top: 0,
+	        left: open ? 0 : -10000,
+	        width: '100%',
+	        height: '100%',
+	        transition: open ? _transitions2.default.easeOut('0ms', 'left', '0ms') : _transitions2.default.easeOut('0ms', 'left', '450ms')
+	      },
+	      content: {
+	        boxSizing: 'border-box',
+	        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+	        transition: _transitions2.default.easeOut(),
+	        position: 'relative',
+	        width: width || '75%',
+	        maxWidth: spacing.desktopKeylineIncrement * 12,
+	        margin: '0 auto',
+	        zIndex: muiTheme.zIndex.dialog
+	      },
+	      body: {
+	        padding: spacing.desktopGutter,
+	        overflowY: autoScrollBodyContent ? 'auto' : 'hidden',
+	        overflowX: 'hidden'
+	      },
+	      actionsContainer: {
+	        boxSizing: 'border-box',
+	        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+	        padding: 8,
+	        marginBottom: 8,
+	        width: '100%',
+	        textAlign: 'right'
+	      },
+	      paper: {
+	        background: rawTheme.palette.canvasColor
+	      },
+	      overlay: {
+	        zIndex: muiTheme.zIndex.dialogOverlay
+	      },
+	      title: {
+	        margin: 0,
+	        padding: gutter + 'px ' + gutter + 'px 0 ' + gutter + 'px',
+	        color: rawTheme.palette.textColor,
+	        fontSize: 24,
+	        lineHeight: '32px',
+	        fontWeight: 400
+	      }
+	    };
+	  },
+	  _getAction: function _getAction(actionJSON) {
+	    var _this2 = this;
+
+	    process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'using actionsJSON is deprecated on Dialog, please provide an array of\n buttons, or any other components instead. For more information please refer to documentations.') : undefined;
+	    var props = {
+	      secondary: true,
+	      onClick: actionJSON.onClick,
+	      onTouchTap: function onTouchTap() {
+	        if (actionJSON.onTouchTap) {
+	          actionJSON.onTouchTap.call(undefined);
+	        }
+	        if (!(actionJSON.onClick || actionJSON.onTouchTap)) {
+	          _this2._requestClose(true);
+	        }
+	      },
+	      label: actionJSON.text,
+	      style: {
+	        marginRight: 8
+	      }
+	    };
+
+	    if (actionJSON.ref) {
+	      props.ref = actionJSON.ref;
+	      props.keyboardFocused = actionJSON.ref === this.props.actionFocus;
+	    }
+	    if (actionJSON.id) {
+	      props.id = actionJSON.id;
+	    }
+
+	    return _react2.default.createElement(_flatButton2.default, props);
+	  },
+	  _getActionObjects: function _getActionObjects(actions) {
+	    var _this3 = this;
+
+	    var actionObjects = [];
+
+	    // ------- Replace this selction with:
+	    //
+	    // React.Children.forEach(actions, action => {
+	    //   if (React.isValidElement(action)) {
+	    //     actionObjects.push(action);
+	    //   }
+	    // });
+	    //
+	    // Also the return element will not need a call to React.Children.toArray
+	    //
+	    // for the 0.15.0 release
+
+	    if (actions) {
+
+	      if (_react2.default.isValidElement(actions)) {
+	        actionObjects.push(actions);
+	      } else {
+	        actions.forEach(function (action) {
+	          if (action) {
+	            if (!_react2.default.isValidElement(action)) {
+	              action = _this3._getAction(action);
+	            }
+	            actionObjects.push(action);
+	          }
+	        });
+	      }
+	    }
+
+	    // ------- End of section
+
+	    return actionObjects;
+	  },
+	  _getActionsContainer: function _getActionsContainer(actions, styles, className) {
+	    var actionObjects = this._getActionObjects(actions);
+
+	    return actionObjects.length > 0 && _react2.default.createElement(
+	      'div',
+	      { className: className, style: this.prepareStyles(styles) },
+	      _react2.default.Children.toArray(actionObjects)
+	    );
+	  },
+	  _positionDialog: function _positionDialog() {
+	    var _props3 = this.props;
+	    var actions = _props3.actions;
+	    var autoDetectWindowHeight = _props3.autoDetectWindowHeight;
+	    var autoScrollBodyContent = _props3.autoScrollBodyContent;
+	    var bodyStyle = _props3.bodyStyle;
+	    var open = _props3.open;
+	    var repositionOnUpdate = _props3.repositionOnUpdate;
+	    var title = _props3.title;
+
+	    if (!open) {
+	      return;
+	    }
+
+	    var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	    var container = _reactDom2.default.findDOMNode(this);
+	    var dialogWindow = _reactDom2.default.findDOMNode(this.refs.dialogWindow);
+	    var dialogContent = _reactDom2.default.findDOMNode(this.refs.dialogContent);
+	    var minPaddingTop = 16;
+
+	    //Reset the height in case the window was resized.
+	    dialogWindow.style.height = '';
+	    dialogContent.style.height = '';
+
+	    var dialogWindowHeight = dialogWindow.offsetHeight;
+	    var paddingTop = (clientHeight - dialogWindowHeight) / 2 - 64;
+	    if (paddingTop < minPaddingTop) paddingTop = minPaddingTop;
+
+	    //Vertically center the dialog window, but make sure it doesn't
+	    //transition to that position.
+	    if (repositionOnUpdate || !container.style.paddingTop) {
+	      container.style.paddingTop = paddingTop + 'px';
+	    }
+
+	    // Force a height if the dialog is taller than clientHeight
+	    if (autoDetectWindowHeight || autoScrollBodyContent) {
+	      var styles = this.getStyles();
+	      styles.body = this.mergeStyles(styles.body, bodyStyle);
+	      var maxDialogContentHeight = clientHeight - 2 * (styles.body.padding + 64);
+
+	      if (title) maxDialogContentHeight -= dialogContent.previousSibling.offsetHeight;
+
+	      var hasActions = this._getActionObjects(actions).length > 0;
+	      if (hasActions) maxDialogContentHeight -= dialogContent.nextSibling.offsetHeight;
+
+	      dialogContent.style.maxHeight = maxDialogContentHeight + 'px';
+	    }
+	  },
+	  _requestClose: function _requestClose(buttonClicked) {
+
+	    if (!buttonClicked && this.props.modal) {
+	      return;
+	    }
+
+	    if (this.props.onRequestClose) {
+	      this.props.onRequestClose(!!buttonClicked);
+	    }
+	  },
+	  _handleOverlayTouchTap: function _handleOverlayTouchTap() {
+	    this._requestClose(false);
+	  },
+	  _handleWindowKeyUp: function _handleWindowKeyUp(event) {
+	    if (event.keyCode === _keyCode2.default.ESC) {
+	      this._requestClose(false);
+	    }
+	  },
+	  _handleResize: function _handleResize() {
+	    if (this.props.open) {
+	      this._positionDialog();
+	    }
+	  },
+	  render: function render() {
+	    var _props4 = this.props;
+	    var actions = _props4.actions;
+	    var actionsContainerClassName = _props4.actionsContainerClassName;
+	    var actionsContainerStyle = _props4.actionsContainerStyle;
+	    var bodyClassName = _props4.bodyClassName;
+	    var bodyStyle = _props4.bodyStyle;
+	    var children = _props4.children;
+	    var className = _props4.className;
+	    var contentClassName = _props4.contentClassName;
+	    var contentStyle = _props4.contentStyle;
+	    var overlayClassName = _props4.overlayClassName;
+	    var overlayStyle = _props4.overlayStyle;
+	    var open = _props4.open;
+	    var titleClassName = _props4.titleClassName;
+	    var titleStyle = _props4.titleStyle;
+	    var title = _props4.title;
+	    var style = _props4.style;
+
+	    var styles = this.getStyles();
+
+	    styles.root = this.mergeStyles(styles.root, style);
+	    styles.content = this.mergeStyles(styles.content, contentStyle);
+	    styles.body = this.mergeStyles(styles.body, bodyStyle);
+	    styles.actionsContainer = this.mergeStyles(styles.actionsContainer, actionsContainerStyle);
+	    styles.overlay = this.mergeStyles(styles.overlay, overlayStyle);
+	    styles.title = this.mergeStyles(styles.title, titleStyle);
+
+	    var actionsContainer = this._getActionsContainer(actions, styles.actionsContainer, actionsContainerClassName);
+
+	    var titleElement = typeof title === 'string' ? _react2.default.createElement(
+	      'h3',
+	      { className: titleClassName, style: this.prepareStyles(styles.title) },
+	      title
+	    ) : title;
+
+	    return _react2.default.createElement(
+	      'div',
+	      { className: className, style: this.prepareStyles(styles.root) },
+	      _react2.default.createElement(
+	        _reactAddonsTransitionGroup2.default,
+	        {
+	          component: 'div', ref: 'dialogWindow',
+	          transitionAppear: true, transitionAppearTimeout: 450,
+	          transitionEnter: true, transitionEnterTimeout: 450
+	        },
+	        open && _react2.default.createElement(
+	          TransitionItem,
+	          {
+	            className: contentClassName,
+	            style: styles.content
+	          },
+	          _react2.default.createElement(
+	            _paper2.default,
+	            {
+	              style: styles.paper,
+	              zDepth: 4
+	            },
+	            titleElement,
+	            _react2.default.createElement(
+	              'div',
+	              {
+	                ref: 'dialogContent',
+	                className: bodyClassName,
+	                style: this.prepareStyles(styles.body)
+	              },
+	              children
+	            ),
+	            actionsContainer
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(_overlay2.default, {
+	        show: open,
+	        className: overlayClassName,
+	        style: styles.overlay,
+	        onTouchTap: this._handleOverlayTouchTap
+	      })
+	    );
+	  }
+	});
+
+	var Dialog = _react2.default.createClass({
+	  displayName: 'Dialog',
+
+	  propTypes: {
+	    /**
+	     * The `ref` of the action to focus on when the `Dialog` is displayed.
+	     */
+	    actionFocus: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.string, 'Instead, use a custom `actions` property.'),
+
+	    /**
+	     * This prop can be either a JSON object containing the actions to render (This is **DEPRECATED**),
+	     * a react elements, or an array of react elements.
+	     */
+	    actions: _react2.default.PropTypes.node,
+
+	    /**
+	     * The `className` to add to the actions container's root element.
+	     */
+	    actionsContainerClassName: _react2.default.PropTypes.string,
+
+	    /**
+	     * Overrides the inline-styles of the actions container's root element.
+	     */
+	    actionsContainerStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * If set to true, the height of the `Dialog` will be auto detected. A max height
+	     * will be enforced so that the content does not extend beyond the viewport.
+	     */
+	    autoDetectWindowHeight: _react2.default.PropTypes.bool,
+
+	    /**
+	     * If set to true, the body content of the `Dialog` will be scrollable.
+	     */
+	    autoScrollBodyContent: _react2.default.PropTypes.bool,
+
+	    /**
+	     * The `className` to add to the content's root element under the title.
+	     */
+	    bodyClassName: _react2.default.PropTypes.string,
+
+	    /**
+	     * Overrides the inline-styles of the content's root element under the title.
+	     */
+	    bodyStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * The contents of the `Dialog`.
+	     */
+	    children: _react2.default.PropTypes.node,
+
+	    /**
+	     * The css class name of the root element.
+	     */
+	    className: _react2.default.PropTypes.string,
+
+	    /**
+	     * The `className` to add to the content container.
+	     */
+	    contentClassName: _react2.default.PropTypes.string,
+
+	    /**
+	     * Overrides the inline-styles of the content container.
+	     */
+	    contentStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * Force the user to use one of the actions in the `Dialog`.
+	     * Clicking outside the `Dialog` will not trigger the `onRequestClose`.
+	     */
+	    modal: _react2.default.PropTypes.bool,
+
+	    /**
+	     * Fired when the `Dialog` is requested to be closed by a click outside the `Dialog` or on the buttons.
+	     *
+	     * @param {bool} buttonClicked Determines whether a button click triggered this request.
+	     */
+	    onRequestClose: _react2.default.PropTypes.func,
+
+	    /**
+	     * Controls whether the Dialog is opened or not.
+	     */
+	    open: _react2.default.PropTypes.bool.isRequired,
+
+	    /**
+	     * The `className` to add to the `Overlay` component that is rendered behind the `Dialog`.
+	     */
+	    overlayClassName: _react2.default.PropTypes.string,
+
+	    /**
+	     * Overrides the inline-styles of the `Overlay` component that is rendered behind the `Dialog`.
+	     */
+	    overlayStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * Determines whether the `Dialog` should be repositioned when it's contents are updated.
+	     */
+	    repositionOnUpdate: _react2.default.PropTypes.bool,
+
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object,
+
+	    /**
+	     * The title to display on the `Dialog`. Could be number, string, element or an array containing these types.
+	     */
+	    title: _react2.default.PropTypes.node,
+
+	    /**
+	     * The `className` to add to the title's root container element.
+	     */
+	    titleClassName: _react2.default.PropTypes.string,
+
+	    /**
+	     * Overrides the inline-styles of the title's root container element.
+	     */
+	    titleStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * Changes the width of the `Dialog`.
+	     */
+	    width: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.any, 'Use the contentStyle.')
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      autoDetectWindowHeight: true,
+	      autoScrollBodyContent: false,
+	      modal: false,
+	      repositionOnUpdate: true
+	    };
+	  },
+	  renderLayer: function renderLayer() {
+	    return _react2.default.createElement(DialogInline, this.props);
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(_renderToLayer2.default, { render: this.renderLayer, open: true, useLayerForClickAway: false });
+	  }
+	});
+
+	exports.default = Dialog;
+	module.exports = exports['default'];
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
 /* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _contextPure = __webpack_require__(222);
+
+	var _contextPure2 = _interopRequireDefault(_contextPure);
+
+	var _transitions = __webpack_require__(190);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _children = __webpack_require__(253);
+
+	var _children2 = _interopRequireDefault(_children);
+
+	var _colorManipulator = __webpack_require__(189);
+
+	var _colorManipulator2 = _interopRequireDefault(_colorManipulator);
+
+	var _styles = __webpack_require__(163);
+
+	var _typography = __webpack_require__(241);
+
+	var _typography2 = _interopRequireDefault(_typography);
+
+	var _enhancedButton = __webpack_require__(252);
+
+	var _enhancedButton2 = _interopRequireDefault(_enhancedButton);
+
+	var _flatButtonLabel = __webpack_require__(281);
+
+	var _flatButtonLabel2 = _interopRequireDefault(_flatButtonLabel);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function validateLabel(props, propName, componentName) {
+	  if (!props.children && !props.label) {
+	    return new Error('Required prop label or children was not ' + 'specified in ' + componentName + '.');
+	  }
+	}
+
+	var FlatButton = _react2.default.createClass({
+	  displayName: 'FlatButton',
+
+	  propTypes: {
+	    /**
+	     * Color of button when mouse is not hovering over it.
+	     */
+	    backgroundColor: _react2.default.PropTypes.string,
+
+	    /**
+	     * This is what will be displayed inside the button.
+	     * If a label is specified, the text within the label prop will
+	     * be displayed. Otherwise, the component will expect children
+	     * which will then be displayed. (In our example,
+	     * we are nesting an `<input type="file" />` and a `span`
+	     * that acts as our label to be displayed.) This only
+	     * applies to flat and raised buttons.
+	     */
+	    children: _react2.default.PropTypes.node,
+
+	    /**
+	     * Disables the button if set to true.
+	     */
+	    disabled: _react2.default.PropTypes.bool,
+
+	    /**
+	     * Color of button when mouse hovers over.
+	     */
+	    hoverColor: _react2.default.PropTypes.string,
+
+	    /**
+	     * URL to link to when button clicked if `linkButton` is set to true.
+	     */
+	    href: _react2.default.PropTypes.string,
+
+	    /**
+	     * Use this property to display an icon.
+	     */
+	    icon: _react2.default.PropTypes.node,
+
+	    /**
+	     * Label for the button.
+	     */
+	    label: validateLabel,
+
+	    /**
+	     * Place label before or after the passed children.
+	     */
+	    labelPosition: _react2.default.PropTypes.oneOf(['before', 'after']),
+
+	    /**
+	     * Override the inline-styles of the button's label element.
+	     */
+	    labelStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * Enables use of `href` property to provide a URL to link to if set to true.
+	     */
+	    linkButton: _react2.default.PropTypes.bool,
+
+	    /**
+	     * Called when element is focused by the keyboard.
+	     */
+	    onKeyboardFocus: _react2.default.PropTypes.func,
+
+	    /**
+	     * Called when the mouse enters the element.
+	     */
+	    onMouseEnter: _react2.default.PropTypes.func,
+
+	    /**
+	     * Called when the mouse leaves the element.
+	     */
+	    onMouseLeave: _react2.default.PropTypes.func,
+
+	    /**
+	     * Called when a touch event is started inside the element.
+	     */
+	    onTouchStart: _react2.default.PropTypes.func,
+
+	    /**
+	     * If true, colors button according to
+	     * primaryTextColor from the Theme.
+	     */
+	    primary: _react2.default.PropTypes.bool,
+
+	    /**
+	     * Color for the ripple after button is clicked.
+	     */
+	    rippleColor: _react2.default.PropTypes.string,
+
+	    /**
+	     * If true, colors button according to secondaryTextColor from the theme.
+	     * The primary prop has precendent if set to true.
+	     */
+	    secondary: _react2.default.PropTypes.bool,
+
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_contextPure2.default],
+
+	  statics: {
+	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+	      var buttonTheme = muiTheme.button;
+	      var flatButtonTheme = muiTheme.flatButton;
+
+	      return {
+	        buttonColor: flatButtonTheme.color,
+	        buttonFilterColor: flatButtonTheme.buttonFilterColor,
+	        buttonHeight: buttonTheme.height,
+	        buttonMinWidth: buttonTheme.minWidth,
+	        disabledTextColor: flatButtonTheme.disabledTextColor,
+	        primaryTextColor: flatButtonTheme.primaryTextColor,
+	        secondaryTextColor: flatButtonTheme.secondaryTextColor,
+	        textColor: flatButtonTheme.textColor,
+	        textTransform: flatButtonTheme.textTransform ? flatButtonTheme.textTransform : buttonTheme.textTransform ? buttonTheme.textTransform : 'uppercase'
+	      };
+	    },
+	    getChildrenClasses: function getChildrenClasses() {
+	      return [_enhancedButton2.default, _flatButtonLabel2.default];
+	    }
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      disabled: false,
+	      labelStyle: {},
+	      labelPosition: 'after',
+	      onKeyboardFocus: function onKeyboardFocus() {},
+	      onMouseEnter: function onMouseEnter() {},
+	      onMouseLeave: function onMouseLeave() {},
+	      onTouchStart: function onTouchStart() {},
+	      primary: false,
+	      secondary: false
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      hovered: false,
+	      isKeyboardFocused: false,
+	      touch: false,
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+
+	  //to update theme inside state whenever a new theme is passed down
+	  //from the parent / owner using context
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+	  _handleKeyboardFocus: function _handleKeyboardFocus(e, isKeyboardFocused) {
+	    this.setState({ isKeyboardFocused: isKeyboardFocused });
+	    this.props.onKeyboardFocus(e, isKeyboardFocused);
+	  },
+	  _handleMouseEnter: function _handleMouseEnter(e) {
+	    //Cancel hover styles for touch devices
+	    if (!this.state.touch) this.setState({ hovered: true });
+	    this.props.onMouseEnter(e);
+	  },
+	  _handleMouseLeave: function _handleMouseLeave(e) {
+	    this.setState({ hovered: false });
+	    this.props.onMouseLeave(e);
+	  },
+	  _handleTouchStart: function _handleTouchStart(e) {
+	    this.setState({ touch: true });
+	    this.props.onTouchStart(e);
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var children = _props.children;
+	    var disabled = _props.disabled;
+	    var hoverColor = _props.hoverColor;
+	    var backgroundColor = _props.backgroundColor;
+	    var icon = _props.icon;
+	    var label = _props.label;
+	    var labelStyle = _props.labelStyle;
+	    var labelPosition = _props.labelPosition;
+	    var primary = _props.primary;
+	    var rippleColor = _props.rippleColor;
+	    var secondary = _props.secondary;
+	    var style = _props.style;
+
+	    var other = _objectWithoutProperties(_props, ['children', 'disabled', 'hoverColor', 'backgroundColor', 'icon', 'label', 'labelStyle', 'labelPosition', 'primary', 'rippleColor', 'secondary', 'style']);
+
+	    var _constructor$getRelev = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+
+	    var buttonColor = _constructor$getRelev.buttonColor;
+	    var buttonHeight = _constructor$getRelev.buttonHeight;
+	    var buttonMinWidth = _constructor$getRelev.buttonMinWidth;
+	    var disabledTextColor = _constructor$getRelev.disabledTextColor;
+	    var buttonFilterColor = _constructor$getRelev.buttonFilterColor;
+	    var primaryTextColor = _constructor$getRelev.primaryTextColor;
+	    var secondaryTextColor = _constructor$getRelev.secondaryTextColor;
+	    var textColor = _constructor$getRelev.textColor;
+	    var textTransform = _constructor$getRelev.textTransform;
+
+	    var defaultTextColor = disabled ? disabledTextColor : primary ? primaryTextColor : secondary ? secondaryTextColor : textColor;
+
+	    var defaultHoverColor = _colorManipulator2.default.fade(buttonFilterColor, 0.2);
+	    var defaultRippleColor = buttonFilterColor;
+	    var buttonHoverColor = hoverColor || defaultHoverColor;
+	    var buttonRippleColor = rippleColor || defaultRippleColor;
+	    var buttonBackgroundColor = backgroundColor || buttonColor;
+	    var hovered = (this.state.hovered || this.state.isKeyboardFocused) && !disabled;
+
+	    var mergedRootStyles = (0, _styles.mergeStyles)({
+	      color: defaultTextColor,
+	      transition: _transitions2.default.easeOut(),
+	      fontSize: _typography2.default.fontStyleButtonFontSize,
+	      letterSpacing: 0,
+	      textTransform: textTransform,
+	      fontWeight: _typography2.default.fontWeightMedium,
+	      borderRadius: 2,
+	      userSelect: 'none',
+	      position: 'relative',
+	      overflow: 'hidden',
+	      backgroundColor: hovered ? buttonHoverColor : buttonBackgroundColor,
+	      lineHeight: buttonHeight + 'px',
+	      minWidth: buttonMinWidth,
+	      padding: 0,
+	      margin: 0
+	    }, style);
+
+	    var iconCloned = undefined;
+	    var labelStyleIcon = {};
+
+	    if (icon) {
+	      iconCloned = _react2.default.cloneElement(icon, {
+	        color: mergedRootStyles.color,
+	        style: {
+	          verticalAlign: 'middle',
+	          marginLeft: labelPosition === 'before' ? 0 : 12,
+	          marginRight: labelPosition === 'before' ? 12 : 0
+	        }
+	      });
+
+	      if (labelPosition === 'before') {
+	        labelStyleIcon.paddingRight = 8;
+	      } else {
+	        labelStyleIcon.paddingLeft = 8;
+	      }
+	    }
+
+	    var labelElement = label ? _react2.default.createElement(_flatButtonLabel2.default, { label: label, style: (0, _styles.mergeStyles)(labelStyleIcon, labelStyle) }) : undefined;
+
+	    // Place label before or after children.
+	    var childrenFragment = labelPosition === 'before' ? {
+	      labelElement: labelElement,
+	      iconCloned: iconCloned,
+	      children: children
+	    } : {
+	      children: children,
+	      iconCloned: iconCloned,
+	      labelElement: labelElement
+	    };
+	    var enhancedButtonChildren = _children2.default.create(childrenFragment);
+
+	    return _react2.default.createElement(
+	      _enhancedButton2.default,
+	      _extends({}, other, {
+	        disabled: disabled,
+	        focusRippleColor: buttonRippleColor,
+	        focusRippleOpacity: 0.3,
+	        onKeyboardFocus: this._handleKeyboardFocus,
+	        onMouseLeave: this._handleMouseLeave,
+	        onMouseEnter: this._handleMouseEnter,
+	        onTouchStart: this._handleTouchStart,
+	        style: mergedRootStyles,
+	        touchRippleColor: buttonRippleColor,
+	        touchRippleOpacity: 0.3
+	      }),
+	      enhancedButtonChildren
+	    );
+	  }
+	});
+
+	exports.default = FlatButton;
+	module.exports = exports['default'];
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _contextPure = __webpack_require__(222);
+
+	var _contextPure2 = _interopRequireDefault(_contextPure);
+
+	var _stylePropable = __webpack_require__(162);
+
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FlatButtonLabel = _react2.default.createClass({
+	  displayName: 'FlatButtonLabel',
+
+	  propTypes: {
+	    label: _react2.default.PropTypes.node,
+
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_contextPure2.default, _stylePropable2.default],
+
+	  statics: {
+	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+	      return {
+	        spacingDesktopGutterLess: muiTheme.rawTheme.spacing.desktopGutterLess
+	      };
+	    }
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+
+	  //to update theme inside state whenever a new theme is passed down
+	  //from the parent / owner using context
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+
+	  render: function render() {
+	    var _props = this.props;
+	    var label = _props.label;
+	    var style = _props.style;
+
+	    var contextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+
+	    var mergedRootStyles = this.mergeStyles({
+	      position: 'relative',
+	      paddingLeft: contextKeys.spacingDesktopGutterLess,
+	      paddingRight: contextKeys.spacingDesktopGutterLess
+	    }, style);
+
+	    return _react2.default.createElement(
+	      'span',
+	      { style: this.prepareStyles(mergedRootStyles) },
+	      label
+	    );
+	  }
+
+	});
+
+	exports.default = FlatButtonLabel;
+	module.exports = exports['default'];
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _stylePropable = __webpack_require__(162);
+
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
+
+	var _transitions = __webpack_require__(190);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _colors = __webpack_require__(211);
+
+	var _colors2 = _interopRequireDefault(_colors);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	var Overlay = _react2.default.createClass({
+	  displayName: 'Overlay',
+
+	  propTypes: {
+	    autoLockScrolling: _react2.default.PropTypes.bool,
+	    show: _react2.default.PropTypes.bool.isRequired,
+
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object,
+	    transitionEnabled: _react2.default.PropTypes.bool
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_stylePropable2.default],
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      autoLockScrolling: true,
+	      transitionEnabled: true,
+	      style: {}
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    if (this.props.show) {
+	      this._applyAutoLockScrolling(this.props);
+	    }
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    if (this.props.show !== nextProps.show) {
+	      this._applyAutoLockScrolling(nextProps);
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    if (this.props.show === true) {
+	      this._allowScrolling();
+	    }
+	  },
+
+	  _originalBodyOverflow: '',
+
+	  setOpacity: function setOpacity(opacity) {
+	    var overlay = _reactDom2.default.findDOMNode(this);
+	    overlay.style.opacity = opacity;
+	  },
+	  getStyles: function getStyles() {
+	    return {
+	      root: {
+	        position: 'fixed',
+	        height: '100%',
+	        width: '100%',
+	        top: 0,
+	        left: '-100%',
+	        opacity: 0,
+	        backgroundColor: _colors2.default.lightBlack,
+	        WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
+
+	        // Two ways to promote overlay to its own render layer
+	        willChange: 'opacity',
+	        transform: 'translateZ(0)',
+
+	        transition: this.props.transitionEnabled && _transitions2.default.easeOut('0ms', 'left', '400ms') + ',' + _transitions2.default.easeOut('400ms', 'opacity')
+	      },
+	      rootWhenShown: {
+	        left: '0',
+	        opacity: 1,
+	        transition: this.props.transitionEnabled && _transitions2.default.easeOut('0ms', 'left') + ',' + _transitions2.default.easeOut('400ms', 'opacity')
+	      }
+	    };
+	  },
+	  _applyAutoLockScrolling: function _applyAutoLockScrolling(props) {
+	    if (props.autoLockScrolling) {
+	      if (props.show) {
+	        this._preventScrolling();
+	      } else {
+	        this._allowScrolling();
+	      }
+	    }
+	  },
+	  _preventScrolling: function _preventScrolling() {
+	    var body = document.getElementsByTagName('body')[0];
+	    this._originalBodyOverflow = body.style.overflow;
+
+	    body.style.overflow = 'hidden';
+	  },
+	  _allowScrolling: function _allowScrolling() {
+	    var body = document.getElementsByTagName('body')[0];
+	    body.style.overflow = this._originalBodyOverflow || '';
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var show = _props.show;
+	    var style = _props.style;
+
+	    var other = _objectWithoutProperties(_props, ['show', 'style']);
+
+	    var styles = this.mergeStyles(this.getStyles().root, style, show && this.getStyles().rootWhenShown);
+
+	    return _react2.default.createElement('div', _extends({}, other, { style: this.prepareStyles(styles) }));
+	  }
+	});
+
+	exports.default = Overlay;
+	module.exports = exports['default'];
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _stylePropable = __webpack_require__(162);
+
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
+
+	var _transitions = __webpack_require__(190);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _clickAwayable = __webpack_require__(235);
+
+	var _clickAwayable2 = _interopRequireDefault(_clickAwayable);
+
+	var _flatButton = __webpack_require__(280);
+
+	var _flatButton2 = _interopRequireDefault(_flatButton);
+
+	var _getMuiTheme = __webpack_require__(193);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	var _contextPure = __webpack_require__(222);
+
+	var _contextPure2 = _interopRequireDefault(_contextPure);
+
+	var _styleResizable = __webpack_require__(284);
+
+	var _styleResizable2 = _interopRequireDefault(_styleResizable);
+
+	var _warning = __webpack_require__(183);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _deprecatedPropType = __webpack_require__(272);
+
+	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	var Snackbar = _react2.default.createClass({
+	  displayName: 'Snackbar',
+
+	  propTypes: {
+	    /**
+	     * The label for the action on the snackbar.
+	     */
+	    action: _react2.default.PropTypes.string,
+
+	    /**
+	     * The number of milliseconds to wait before automatically dismissing.
+	     * If no value is specified the snackbar will dismiss normally.
+	     * If a value is provided the snackbar can still be dismissed normally.
+	     * If a snackbar is dismissed before the timer expires, the timer will be cleared.
+	     */
+	    autoHideDuration: _react2.default.PropTypes.number,
+
+	    /**
+	     * Override the inline-styles of the body element.
+	     */
+	    bodyStyle: _react2.default.PropTypes.object,
+
+	    /**
+	     * The css class name of the root element.
+	     */
+	    className: _react2.default.PropTypes.string,
+
+	    /**
+	     * The message to be displayed.
+	     */
+	    message: _react2.default.PropTypes.node.isRequired,
+
+	    /**
+	     * Fired when the action button is touchtapped.
+	     *
+	     * @param {object} event Action button event.
+	     */
+	    onActionTouchTap: _react2.default.PropTypes.func,
+
+	    /**
+	     * Fired when the `Snackbar` is dismissed.
+	     */
+	    onDismiss: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.func, 'Instead, use the open property to control the component.'),
+
+	    /**
+	     * Fired when the `Snackbar` is requested to be closed by a click outside the `Snackbar`, or after the
+	     * `autoHideDuration` timer expires.
+	     *
+	     * Typically `onRequestClose` is used to set state in the parent component, which is used to control the `Snackbar`
+	     * `open` prop.
+	     *
+	     * The `reason` parameter can optionally be used to control the response to `onRequestClose`,
+	     * for example ignoring `clickaway`.
+	     *
+	     * @param {string} reason Can be:`"timeout"` (`autoHideDuration` expired) or: `"clickaway"`
+	     */
+	    onRequestClose: _react2.default.PropTypes.func.isRequired,
+
+	    /**
+	     * Fired when the `Snackbar` is shown.
+	     */
+	    onShow: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.func, 'Instead, use the open property to control the component.'),
+
+	    /**
+	     * Controls whether the `Snackbar` is opened or not.
+	     */
+	    open: _react2.default.PropTypes.bool.isRequired,
+
+	    /**
+	     * If true, the `Snackbar` will open once mounted.
+	     */
+	    openOnMount: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.bool, 'Instead, use the open property to control the component.'),
+
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object
+	  },
+
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+
+	  mixins: [_stylePropable2.default, _styleResizable2.default, _clickAwayable2.default, _contextPure2.default],
+
+	  statics: {
+	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+	      var theme = muiTheme.snackbar;
+	      var spacing = muiTheme.rawTheme.spacing;
+
+	      return {
+	        textColor: theme.textColor,
+	        backgroundColor: theme.backgroundColor,
+	        desktopGutter: spacing.desktopGutter,
+	        desktopSubheaderHeight: spacing.desktopSubheaderHeight,
+	        actionColor: theme.actionColor
+	      };
+	    },
+	    getChildrenClasses: function getChildrenClasses() {
+	      return [_flatButton2.default];
+	    }
+	  },
+
+	  getInitialState: function getInitialState() {
+	    var open = this.props.open;
+
+	    if (open === null) {
+	      open = this.props.openOnMount;
+	    }
+
+	    return {
+	      open: open,
+	      message: this.props.message,
+	      action: this.props.action,
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var _this = this;
+
+	    if (this.state.open) {
+	      this._setAutoHideTimer();
+
+	      //Only Bind clickaway after transition finishes
+	      this.timerTransitionId = setTimeout(function () {
+	        _this._bindClickAway();
+	      }, 400);
+	    }
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var _this2 = this;
+
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({
+	      muiTheme: newMuiTheme
+	    });
+
+	    if (this.state.open && nextProps.open === this.props.open && (nextProps.message !== this.props.message || nextProps.action !== this.props.action)) {
+	      this.setState({
+	        open: false
+	      });
+
+	      clearTimeout(this.timerOneAtTheTimeId);
+	      this.timerOneAtTheTimeId = setTimeout(function () {
+	        _this2.setState({
+	          message: nextProps.message,
+	          action: nextProps.action,
+	          open: true
+	        });
+	      }, 400);
+	    } else {
+	      var open = nextProps.open;
+
+	      this.setState({
+	        open: open !== null ? open : this.state.open,
+	        message: nextProps.message,
+	        action: nextProps.action
+	      });
+	    }
+	  },
+	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	    var _this3 = this;
+
+	    if (prevState.open !== this.state.open) {
+	      if (this.state.open) {
+	        this._setAutoHideTimer();
+
+	        //Only Bind clickaway after transition finishes
+	        this.timerTransitionId = setTimeout(function () {
+	          _this3._bindClickAway();
+	        }, 400);
+	      } else {
+	        clearTimeout(this.timerAutoHideId);
+	        this._unbindClickAway();
+	      }
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    clearTimeout(this.timerAutoHideId);
+	    clearTimeout(this.timerTransitionId);
+	    clearTimeout(this.timerOneAtTheTimeId);
+	    this._unbindClickAway();
+	  },
+
+	  manuallyBindClickAway: true,
+
+	  timerAutoHideId: undefined,
+	  timerTransitionId: undefined,
+	  timerOneAtTheTimeId: undefined,
+
+	  componentClickAway: function componentClickAway() {
+	    if (this.props.open !== null && this.props.onRequestClose) {
+	      this.props.onRequestClose('clickaway');
+	    } else {
+	      this.setState({ open: false });
+	    }
+	  },
+	  getStyles: function getStyles() {
+	    var _constructor$getRelev = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+
+	    var textColor = _constructor$getRelev.textColor;
+	    var backgroundColor = _constructor$getRelev.backgroundColor;
+	    var desktopGutter = _constructor$getRelev.desktopGutter;
+	    var desktopSubheaderHeight = _constructor$getRelev.desktopSubheaderHeight;
+	    var actionColor = _constructor$getRelev.actionColor;
+
+	    var isSmall = this.state.deviceSize === this.constructor.Sizes.SMALL;
+
+	    var styles = {
+	      root: {
+	        position: 'fixed',
+	        left: 0,
+	        display: 'flex',
+	        right: 0,
+	        bottom: 0,
+	        zIndex: this.state.muiTheme.zIndex.snackbar,
+	        visibility: 'hidden',
+	        transform: 'translate3d(0, ' + desktopSubheaderHeight + 'px, 0)',
+	        transition: _transitions2.default.easeOut('400ms', 'transform') + ',' + _transitions2.default.easeOut('400ms', 'visibility')
+	      },
+	      rootWhenOpen: {
+	        visibility: 'visible',
+	        transform: 'translate3d(0, 0, 0)'
+	      },
+	      body: {
+	        backgroundColor: backgroundColor,
+	        padding: '0 ' + desktopGutter + 'px',
+	        height: desktopSubheaderHeight,
+	        lineHeight: desktopSubheaderHeight + 'px',
+	        borderRadius: isSmall ? 0 : 2,
+	        maxWidth: isSmall ? 'inherit' : 568,
+	        minWidth: isSmall ? 'inherit' : 288,
+	        flexGrow: isSmall ? 1 : 0,
+	        margin: 'auto'
+	      },
+	      content: {
+	        fontSize: 14,
+	        color: textColor,
+	        opacity: 0,
+	        transition: _transitions2.default.easeOut('400ms', 'opacity')
+	      },
+	      contentWhenOpen: {
+	        opacity: 1,
+	        transition: _transitions2.default.easeOut('500ms', 'opacity', '100ms')
+	      },
+	      action: {
+	        color: actionColor,
+	        float: 'right',
+	        marginTop: 6,
+	        marginRight: -16,
+	        marginLeft: desktopGutter,
+	        backgroundColor: 'transparent'
+	      }
+	    };
+
+	    return styles;
+	  },
+	  show: function show() {
+	    process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'show has been deprecated in favor of explicitly setting the open property.') : undefined;
+
+	    this.setState({
+	      open: true
+	    });
+
+	    if (this.props.onShow) {
+	      this.props.onShow();
+	    }
+	  },
+	  _onDismiss: function _onDismiss() {
+	    if (this.props.onDismiss) {
+	      this.props.onDismiss();
+	    }
+	  },
+	  dismiss: function dismiss() {
+	    process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'dismiss has been deprecated in favor of explicitly setting the open property.') : undefined;
+
+	    this.setState({
+	      open: false
+	    }, this._onDismiss);
+	  },
+	  _setAutoHideTimer: function _setAutoHideTimer() {
+	    var _this4 = this;
+
+	    var autoHideDuration = this.props.autoHideDuration;
+
+	    if (autoHideDuration > 0) {
+	      clearTimeout(this.timerAutoHideId);
+	      this.timerAutoHideId = setTimeout(function () {
+	        if (_this4.props.open !== null && _this4.props.onRequestClose) {
+	          _this4.props.onRequestClose('timeout');
+	        } else {
+	          _this4.setState({ open: false });
+	        }
+	      }, autoHideDuration);
+	    }
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var onActionTouchTap = _props.onActionTouchTap;
+	    var style = _props.style;
+	    var bodyStyle = _props.bodyStyle;
+
+	    var others = _objectWithoutProperties(_props, ['onActionTouchTap', 'style', 'bodyStyle']);
+
+	    var styles = this.getStyles();
+
+	    var _state = this.state;
+	    var open = _state.open;
+	    var action = _state.action;
+	    var message = _state.message;
+
+	    var rootStyles = open ? this.mergeStyles(styles.root, styles.rootWhenOpen, style) : this.mergeStyles(styles.root, style);
+
+	    var actionButton = undefined;
+	    if (action) {
+	      actionButton = _react2.default.createElement(_flatButton2.default, {
+	        style: styles.action,
+	        label: action,
+	        onTouchTap: onActionTouchTap
+	      });
+	    }
+
+	    var mergedBodyStyle = this.mergeStyles(styles.body, bodyStyle);
+
+	    var contentStyle = open ? this.mergeStyles(styles.content, styles.contentWhenOpen) : styles.content;
+
+	    return _react2.default.createElement(
+	      'div',
+	      _extends({}, others, { style: rootStyles }),
+	      _react2.default.createElement(
+	        'div',
+	        { style: mergedBodyStyle },
+	        _react2.default.createElement(
+	          'div',
+	          { style: contentStyle },
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            message
+	          ),
+	          actionButton
+	        )
+	      )
+	    );
+	  }
+	});
+
+	exports.default = Snackbar;
+	module.exports = exports['default'];
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _events = __webpack_require__(236);
+
+	var _events2 = _interopRequireDefault(_events);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Sizes = {
+	  SMALL: 1,
+	  MEDIUM: 2,
+	  LARGE: 3
+	};
+
+	exports.default = {
+
+	  statics: {
+	    Sizes: Sizes
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      deviceSize: Sizes.SMALL
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this._updateDeviceSize();
+	    if (!this.manuallyBindResize) this._bindResize();
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this._unbindResize();
+	  },
+	  isDeviceSize: function isDeviceSize(desiredSize) {
+	    return this.state.deviceSize >= desiredSize;
+	  },
+	  _updateDeviceSize: function _updateDeviceSize() {
+	    var width = window.innerWidth;
+
+	    if (width >= 992) {
+	      this.setState({ deviceSize: Sizes.LARGE });
+	    } else if (width >= 768) {
+	      this.setState({ deviceSize: Sizes.MEDIUM });
+	    } else {
+	      // width < 768
+	      this.setState({ deviceSize: Sizes.SMALL });
+	    }
+	  },
+	  _bindResize: function _bindResize() {
+	    _events2.default.on(window, 'resize', this._updateDeviceSize);
+	  },
+	  _unbindResize: function _unbindResize() {
+	    _events2.default.off(window, 'resize', this._updateDeviceSize);
+	  }
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -58328,10 +60074,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(281)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(287)(module), (function() { return this; }())))
 
 /***/ },
-/* 281 */
+/* 287 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -58347,1277 +60093,16 @@
 
 
 /***/ },
-/* 282 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _windowListenable = __webpack_require__(245);
-
-	var _windowListenable2 = _interopRequireDefault(_windowListenable);
-
-	var _keyCode = __webpack_require__(238);
-
-	var _keyCode2 = _interopRequireDefault(_keyCode);
-
-	var _transitions = __webpack_require__(190);
-
-	var _transitions2 = _interopRequireDefault(_transitions);
-
-	var _stylePropable = __webpack_require__(162);
-
-	var _stylePropable2 = _interopRequireDefault(_stylePropable);
-
-	var _flatButton = __webpack_require__(283);
-
-	var _flatButton2 = _interopRequireDefault(_flatButton);
-
-	var _overlay = __webpack_require__(285);
-
-	var _overlay2 = _interopRequireDefault(_overlay);
-
-	var _renderToLayer = __webpack_require__(246);
-
-	var _renderToLayer2 = _interopRequireDefault(_renderToLayer);
-
-	var _paper = __webpack_require__(242);
-
-	var _paper2 = _interopRequireDefault(_paper);
-
-	var _getMuiTheme = __webpack_require__(193);
-
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-
-	var _warning = __webpack_require__(183);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	var _deprecatedPropType = __webpack_require__(272);
-
-	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
-
-	var _reactAddonsTransitionGroup = __webpack_require__(258);
-
-	var _reactAddonsTransitionGroup2 = _interopRequireDefault(_reactAddonsTransitionGroup);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	var TransitionItem = _react2.default.createClass({
-	  displayName: 'TransitionItem',
-
-	  propTypes: {
-	    children: _react2.default.PropTypes.node,
-	    style: _react2.default.PropTypes.object
-	  },
-
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  mixins: [_stylePropable2.default],
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      style: {},
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
-	    };
-	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-
-	  //to update theme inside state whenever a new theme is passed down
-	  //from the parent / owner using context
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({ muiTheme: newMuiTheme });
-	  },
-	  componentWillEnter: function componentWillEnter(callback) {
-	    this.componentWillAppear(callback);
-	  },
-	  componentWillAppear: function componentWillAppear(callback) {
-	    var spacing = this.state.muiTheme.rawTheme.spacing;
-
-	    this.setState({
-	      style: {
-	        opacity: 1,
-	        transform: 'translate3d(0, ' + spacing.desktopKeylineIncrement + 'px, 0)'
-	      }
-	    });
-
-	    setTimeout(callback, 450); // matches transition duration
-	  },
-	  componentWillLeave: function componentWillLeave(callback) {
-	    var _this = this;
-
-	    this.setState({
-	      style: {
-	        opacity: 0,
-	        transform: 'translate3d(0, 0, 0)'
-	      }
-	    });
-
-	    setTimeout(function () {
-	      if (_this.isMounted()) callback();
-	    }, 450); // matches transition duration
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var style = _props.style;
-	    var children = _props.children;
-
-	    var other = _objectWithoutProperties(_props, ['style', 'children']);
-
-	    return _react2.default.createElement(
-	      'div',
-	      _extends({}, other, { style: this.prepareStyles(this.state.style, style) }),
-	      children
-	    );
-	  }
-	});
-
-	var DialogInline = _react2.default.createClass({
-	  displayName: 'DialogInline',
-
-	  propTypes: {
-	    actionFocus: _react2.default.PropTypes.string,
-	    actions: _react2.default.PropTypes.node,
-	    actionsContainerClassName: _react2.default.PropTypes.string,
-	    actionsContainerStyle: _react2.default.PropTypes.object,
-	    autoDetectWindowHeight: _react2.default.PropTypes.bool,
-	    autoScrollBodyContent: _react2.default.PropTypes.bool,
-	    bodyClassName: _react2.default.PropTypes.string,
-	    bodyStyle: _react2.default.PropTypes.object,
-	    children: _react2.default.PropTypes.node,
-	    className: _react2.default.PropTypes.string,
-	    contentClassName: _react2.default.PropTypes.string,
-	    contentStyle: _react2.default.PropTypes.object,
-	    modal: _react2.default.PropTypes.bool,
-	    onRequestClose: _react2.default.PropTypes.func,
-	    open: _react2.default.PropTypes.bool.isRequired,
-	    overlayClassName: _react2.default.PropTypes.string,
-	    overlayStyle: _react2.default.PropTypes.object,
-	    repositionOnUpdate: _react2.default.PropTypes.bool,
-	    style: _react2.default.PropTypes.object,
-	    title: _react2.default.PropTypes.node,
-	    titleClassName: _react2.default.PropTypes.string,
-	    titleStyle: _react2.default.PropTypes.object,
-	    width: _react2.default.PropTypes.any
-	  },
-
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  mixins: [_windowListenable2.default, _stylePropable2.default],
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
-	    };
-	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this._positionDialog();
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({ muiTheme: newMuiTheme });
-	  },
-	  componentDidUpdate: function componentDidUpdate() {
-	    this._positionDialog();
-	  },
-
-	  windowListeners: {
-	    keyup: '_handleWindowKeyUp',
-	    resize: '_handleResize'
-	  },
-
-	  getStyles: function getStyles() {
-	    var _props2 = this.props;
-	    var autoScrollBodyContent = _props2.autoScrollBodyContent;
-	    var open = _props2.open;
-	    var width = _props2.width;
-
-	    var muiTheme = this.state.muiTheme;
-	    var rawTheme = muiTheme.rawTheme;
-	    var spacing = rawTheme.spacing;
-	    var gutter = spacing.desktopGutter;
-
-	    return {
-	      root: {
-	        position: 'fixed',
-	        boxSizing: 'border-box',
-	        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-	        zIndex: muiTheme.zIndex.dialog,
-	        top: 0,
-	        left: open ? 0 : -10000,
-	        width: '100%',
-	        height: '100%',
-	        transition: open ? _transitions2.default.easeOut('0ms', 'left', '0ms') : _transitions2.default.easeOut('0ms', 'left', '450ms')
-	      },
-	      content: {
-	        boxSizing: 'border-box',
-	        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-	        transition: _transitions2.default.easeOut(),
-	        position: 'relative',
-	        width: width || '75%',
-	        maxWidth: spacing.desktopKeylineIncrement * 12,
-	        margin: '0 auto',
-	        zIndex: muiTheme.zIndex.dialog
-	      },
-	      body: {
-	        padding: spacing.desktopGutter,
-	        overflowY: autoScrollBodyContent ? 'auto' : 'hidden',
-	        overflowX: 'hidden'
-	      },
-	      actionsContainer: {
-	        boxSizing: 'border-box',
-	        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-	        padding: 8,
-	        marginBottom: 8,
-	        width: '100%',
-	        textAlign: 'right'
-	      },
-	      paper: {
-	        background: rawTheme.palette.canvasColor
-	      },
-	      overlay: {
-	        zIndex: muiTheme.zIndex.dialogOverlay
-	      },
-	      title: {
-	        margin: 0,
-	        padding: gutter + 'px ' + gutter + 'px 0 ' + gutter + 'px',
-	        color: rawTheme.palette.textColor,
-	        fontSize: 24,
-	        lineHeight: '32px',
-	        fontWeight: 400
-	      }
-	    };
-	  },
-	  _getAction: function _getAction(actionJSON) {
-	    var _this2 = this;
-
-	    process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'using actionsJSON is deprecated on Dialog, please provide an array of\n buttons, or any other components instead. For more information please refer to documentations.') : undefined;
-	    var props = {
-	      secondary: true,
-	      onClick: actionJSON.onClick,
-	      onTouchTap: function onTouchTap() {
-	        if (actionJSON.onTouchTap) {
-	          actionJSON.onTouchTap.call(undefined);
-	        }
-	        if (!(actionJSON.onClick || actionJSON.onTouchTap)) {
-	          _this2._requestClose(true);
-	        }
-	      },
-	      label: actionJSON.text,
-	      style: {
-	        marginRight: 8
-	      }
-	    };
-
-	    if (actionJSON.ref) {
-	      props.ref = actionJSON.ref;
-	      props.keyboardFocused = actionJSON.ref === this.props.actionFocus;
-	    }
-	    if (actionJSON.id) {
-	      props.id = actionJSON.id;
-	    }
-
-	    return _react2.default.createElement(_flatButton2.default, props);
-	  },
-	  _getActionObjects: function _getActionObjects(actions) {
-	    var _this3 = this;
-
-	    var actionObjects = [];
-
-	    // ------- Replace this selction with:
-	    //
-	    // React.Children.forEach(actions, action => {
-	    //   if (React.isValidElement(action)) {
-	    //     actionObjects.push(action);
-	    //   }
-	    // });
-	    //
-	    // Also the return element will not need a call to React.Children.toArray
-	    //
-	    // for the 0.15.0 release
-
-	    if (actions) {
-
-	      if (_react2.default.isValidElement(actions)) {
-	        actionObjects.push(actions);
-	      } else {
-	        actions.forEach(function (action) {
-	          if (action) {
-	            if (!_react2.default.isValidElement(action)) {
-	              action = _this3._getAction(action);
-	            }
-	            actionObjects.push(action);
-	          }
-	        });
-	      }
-	    }
-
-	    // ------- End of section
-
-	    return actionObjects;
-	  },
-	  _getActionsContainer: function _getActionsContainer(actions, styles, className) {
-	    var actionObjects = this._getActionObjects(actions);
-
-	    return actionObjects.length > 0 && _react2.default.createElement(
-	      'div',
-	      { className: className, style: this.prepareStyles(styles) },
-	      _react2.default.Children.toArray(actionObjects)
-	    );
-	  },
-	  _positionDialog: function _positionDialog() {
-	    var _props3 = this.props;
-	    var actions = _props3.actions;
-	    var autoDetectWindowHeight = _props3.autoDetectWindowHeight;
-	    var autoScrollBodyContent = _props3.autoScrollBodyContent;
-	    var bodyStyle = _props3.bodyStyle;
-	    var open = _props3.open;
-	    var repositionOnUpdate = _props3.repositionOnUpdate;
-	    var title = _props3.title;
-
-	    if (!open) {
-	      return;
-	    }
-
-	    var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-	    var container = _reactDom2.default.findDOMNode(this);
-	    var dialogWindow = _reactDom2.default.findDOMNode(this.refs.dialogWindow);
-	    var dialogContent = _reactDom2.default.findDOMNode(this.refs.dialogContent);
-	    var minPaddingTop = 16;
-
-	    //Reset the height in case the window was resized.
-	    dialogWindow.style.height = '';
-	    dialogContent.style.height = '';
-
-	    var dialogWindowHeight = dialogWindow.offsetHeight;
-	    var paddingTop = (clientHeight - dialogWindowHeight) / 2 - 64;
-	    if (paddingTop < minPaddingTop) paddingTop = minPaddingTop;
-
-	    //Vertically center the dialog window, but make sure it doesn't
-	    //transition to that position.
-	    if (repositionOnUpdate || !container.style.paddingTop) {
-	      container.style.paddingTop = paddingTop + 'px';
-	    }
-
-	    // Force a height if the dialog is taller than clientHeight
-	    if (autoDetectWindowHeight || autoScrollBodyContent) {
-	      var styles = this.getStyles();
-	      styles.body = this.mergeStyles(styles.body, bodyStyle);
-	      var maxDialogContentHeight = clientHeight - 2 * (styles.body.padding + 64);
-
-	      if (title) maxDialogContentHeight -= dialogContent.previousSibling.offsetHeight;
-
-	      var hasActions = this._getActionObjects(actions).length > 0;
-	      if (hasActions) maxDialogContentHeight -= dialogContent.nextSibling.offsetHeight;
-
-	      dialogContent.style.maxHeight = maxDialogContentHeight + 'px';
-	    }
-	  },
-	  _requestClose: function _requestClose(buttonClicked) {
-
-	    if (!buttonClicked && this.props.modal) {
-	      return;
-	    }
-
-	    if (this.props.onRequestClose) {
-	      this.props.onRequestClose(!!buttonClicked);
-	    }
-	  },
-	  _handleOverlayTouchTap: function _handleOverlayTouchTap() {
-	    this._requestClose(false);
-	  },
-	  _handleWindowKeyUp: function _handleWindowKeyUp(event) {
-	    if (event.keyCode === _keyCode2.default.ESC) {
-	      this._requestClose(false);
-	    }
-	  },
-	  _handleResize: function _handleResize() {
-	    if (this.props.open) {
-	      this._positionDialog();
-	    }
-	  },
-	  render: function render() {
-	    var _props4 = this.props;
-	    var actions = _props4.actions;
-	    var actionsContainerClassName = _props4.actionsContainerClassName;
-	    var actionsContainerStyle = _props4.actionsContainerStyle;
-	    var bodyClassName = _props4.bodyClassName;
-	    var bodyStyle = _props4.bodyStyle;
-	    var children = _props4.children;
-	    var className = _props4.className;
-	    var contentClassName = _props4.contentClassName;
-	    var contentStyle = _props4.contentStyle;
-	    var overlayClassName = _props4.overlayClassName;
-	    var overlayStyle = _props4.overlayStyle;
-	    var open = _props4.open;
-	    var titleClassName = _props4.titleClassName;
-	    var titleStyle = _props4.titleStyle;
-	    var title = _props4.title;
-	    var style = _props4.style;
-
-	    var styles = this.getStyles();
-
-	    styles.root = this.mergeStyles(styles.root, style);
-	    styles.content = this.mergeStyles(styles.content, contentStyle);
-	    styles.body = this.mergeStyles(styles.body, bodyStyle);
-	    styles.actionsContainer = this.mergeStyles(styles.actionsContainer, actionsContainerStyle);
-	    styles.overlay = this.mergeStyles(styles.overlay, overlayStyle);
-	    styles.title = this.mergeStyles(styles.title, titleStyle);
-
-	    var actionsContainer = this._getActionsContainer(actions, styles.actionsContainer, actionsContainerClassName);
-
-	    var titleElement = typeof title === 'string' ? _react2.default.createElement(
-	      'h3',
-	      { className: titleClassName, style: this.prepareStyles(styles.title) },
-	      title
-	    ) : title;
-
-	    return _react2.default.createElement(
-	      'div',
-	      { className: className, style: this.prepareStyles(styles.root) },
-	      _react2.default.createElement(
-	        _reactAddonsTransitionGroup2.default,
-	        {
-	          component: 'div', ref: 'dialogWindow',
-	          transitionAppear: true, transitionAppearTimeout: 450,
-	          transitionEnter: true, transitionEnterTimeout: 450
-	        },
-	        open && _react2.default.createElement(
-	          TransitionItem,
-	          {
-	            className: contentClassName,
-	            style: styles.content
-	          },
-	          _react2.default.createElement(
-	            _paper2.default,
-	            {
-	              style: styles.paper,
-	              zDepth: 4
-	            },
-	            titleElement,
-	            _react2.default.createElement(
-	              'div',
-	              {
-	                ref: 'dialogContent',
-	                className: bodyClassName,
-	                style: this.prepareStyles(styles.body)
-	              },
-	              children
-	            ),
-	            actionsContainer
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(_overlay2.default, {
-	        show: open,
-	        className: overlayClassName,
-	        style: styles.overlay,
-	        onTouchTap: this._handleOverlayTouchTap
-	      })
-	    );
-	  }
-	});
-
-	var Dialog = _react2.default.createClass({
-	  displayName: 'Dialog',
-
-	  propTypes: {
-	    /**
-	     * The `ref` of the action to focus on when the `Dialog` is displayed.
-	     */
-	    actionFocus: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.string, 'Instead, use a custom `actions` property.'),
-
-	    /**
-	     * This prop can be either a JSON object containing the actions to render (This is **DEPRECATED**),
-	     * a react elements, or an array of react elements.
-	     */
-	    actions: _react2.default.PropTypes.node,
-
-	    /**
-	     * The `className` to add to the actions container's root element.
-	     */
-	    actionsContainerClassName: _react2.default.PropTypes.string,
-
-	    /**
-	     * Overrides the inline-styles of the actions container's root element.
-	     */
-	    actionsContainerStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * If set to true, the height of the `Dialog` will be auto detected. A max height
-	     * will be enforced so that the content does not extend beyond the viewport.
-	     */
-	    autoDetectWindowHeight: _react2.default.PropTypes.bool,
-
-	    /**
-	     * If set to true, the body content of the `Dialog` will be scrollable.
-	     */
-	    autoScrollBodyContent: _react2.default.PropTypes.bool,
-
-	    /**
-	     * The `className` to add to the content's root element under the title.
-	     */
-	    bodyClassName: _react2.default.PropTypes.string,
-
-	    /**
-	     * Overrides the inline-styles of the content's root element under the title.
-	     */
-	    bodyStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * The contents of the `Dialog`.
-	     */
-	    children: _react2.default.PropTypes.node,
-
-	    /**
-	     * The css class name of the root element.
-	     */
-	    className: _react2.default.PropTypes.string,
-
-	    /**
-	     * The `className` to add to the content container.
-	     */
-	    contentClassName: _react2.default.PropTypes.string,
-
-	    /**
-	     * Overrides the inline-styles of the content container.
-	     */
-	    contentStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * Force the user to use one of the actions in the `Dialog`.
-	     * Clicking outside the `Dialog` will not trigger the `onRequestClose`.
-	     */
-	    modal: _react2.default.PropTypes.bool,
-
-	    /**
-	     * Fired when the `Dialog` is requested to be closed by a click outside the `Dialog` or on the buttons.
-	     *
-	     * @param {bool} buttonClicked Determines whether a button click triggered this request.
-	     */
-	    onRequestClose: _react2.default.PropTypes.func,
-
-	    /**
-	     * Controls whether the Dialog is opened or not.
-	     */
-	    open: _react2.default.PropTypes.bool.isRequired,
-
-	    /**
-	     * The `className` to add to the `Overlay` component that is rendered behind the `Dialog`.
-	     */
-	    overlayClassName: _react2.default.PropTypes.string,
-
-	    /**
-	     * Overrides the inline-styles of the `Overlay` component that is rendered behind the `Dialog`.
-	     */
-	    overlayStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * Determines whether the `Dialog` should be repositioned when it's contents are updated.
-	     */
-	    repositionOnUpdate: _react2.default.PropTypes.bool,
-
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object,
-
-	    /**
-	     * The title to display on the `Dialog`. Could be number, string, element or an array containing these types.
-	     */
-	    title: _react2.default.PropTypes.node,
-
-	    /**
-	     * The `className` to add to the title's root container element.
-	     */
-	    titleClassName: _react2.default.PropTypes.string,
-
-	    /**
-	     * Overrides the inline-styles of the title's root container element.
-	     */
-	    titleStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * Changes the width of the `Dialog`.
-	     */
-	    width: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.any, 'Use the contentStyle.')
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      autoDetectWindowHeight: true,
-	      autoScrollBodyContent: false,
-	      modal: false,
-	      repositionOnUpdate: true
-	    };
-	  },
-	  renderLayer: function renderLayer() {
-	    return _react2.default.createElement(DialogInline, this.props);
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(_renderToLayer2.default, { render: this.renderLayer, open: true, useLayerForClickAway: false });
-	  }
-	});
-
-	exports.default = Dialog;
-	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 283 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _contextPure = __webpack_require__(222);
-
-	var _contextPure2 = _interopRequireDefault(_contextPure);
-
-	var _transitions = __webpack_require__(190);
-
-	var _transitions2 = _interopRequireDefault(_transitions);
-
-	var _children = __webpack_require__(253);
-
-	var _children2 = _interopRequireDefault(_children);
-
-	var _colorManipulator = __webpack_require__(189);
-
-	var _colorManipulator2 = _interopRequireDefault(_colorManipulator);
-
-	var _styles = __webpack_require__(163);
-
-	var _typography = __webpack_require__(241);
-
-	var _typography2 = _interopRequireDefault(_typography);
-
-	var _enhancedButton = __webpack_require__(252);
-
-	var _enhancedButton2 = _interopRequireDefault(_enhancedButton);
-
-	var _flatButtonLabel = __webpack_require__(284);
-
-	var _flatButtonLabel2 = _interopRequireDefault(_flatButtonLabel);
-
-	var _getMuiTheme = __webpack_require__(193);
-
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	function validateLabel(props, propName, componentName) {
-	  if (!props.children && !props.label) {
-	    return new Error('Required prop label or children was not ' + 'specified in ' + componentName + '.');
-	  }
-	}
-
-	var FlatButton = _react2.default.createClass({
-	  displayName: 'FlatButton',
-
-	  propTypes: {
-	    /**
-	     * Color of button when mouse is not hovering over it.
-	     */
-	    backgroundColor: _react2.default.PropTypes.string,
-
-	    /**
-	     * This is what will be displayed inside the button.
-	     * If a label is specified, the text within the label prop will
-	     * be displayed. Otherwise, the component will expect children
-	     * which will then be displayed. (In our example,
-	     * we are nesting an `<input type="file" />` and a `span`
-	     * that acts as our label to be displayed.) This only
-	     * applies to flat and raised buttons.
-	     */
-	    children: _react2.default.PropTypes.node,
-
-	    /**
-	     * Disables the button if set to true.
-	     */
-	    disabled: _react2.default.PropTypes.bool,
-
-	    /**
-	     * Color of button when mouse hovers over.
-	     */
-	    hoverColor: _react2.default.PropTypes.string,
-
-	    /**
-	     * URL to link to when button clicked if `linkButton` is set to true.
-	     */
-	    href: _react2.default.PropTypes.string,
-
-	    /**
-	     * Use this property to display an icon.
-	     */
-	    icon: _react2.default.PropTypes.node,
-
-	    /**
-	     * Label for the button.
-	     */
-	    label: validateLabel,
-
-	    /**
-	     * Place label before or after the passed children.
-	     */
-	    labelPosition: _react2.default.PropTypes.oneOf(['before', 'after']),
-
-	    /**
-	     * Override the inline-styles of the button's label element.
-	     */
-	    labelStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * Enables use of `href` property to provide a URL to link to if set to true.
-	     */
-	    linkButton: _react2.default.PropTypes.bool,
-
-	    /**
-	     * Called when element is focused by the keyboard.
-	     */
-	    onKeyboardFocus: _react2.default.PropTypes.func,
-
-	    /**
-	     * Called when the mouse enters the element.
-	     */
-	    onMouseEnter: _react2.default.PropTypes.func,
-
-	    /**
-	     * Called when the mouse leaves the element.
-	     */
-	    onMouseLeave: _react2.default.PropTypes.func,
-
-	    /**
-	     * Called when a touch event is started inside the element.
-	     */
-	    onTouchStart: _react2.default.PropTypes.func,
-
-	    /**
-	     * If true, colors button according to
-	     * primaryTextColor from the Theme.
-	     */
-	    primary: _react2.default.PropTypes.bool,
-
-	    /**
-	     * Color for the ripple after button is clicked.
-	     */
-	    rippleColor: _react2.default.PropTypes.string,
-
-	    /**
-	     * If true, colors button according to secondaryTextColor from the theme.
-	     * The primary prop has precendent if set to true.
-	     */
-	    secondary: _react2.default.PropTypes.bool,
-
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object
-	  },
-
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  mixins: [_contextPure2.default],
-
-	  statics: {
-	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
-	      var buttonTheme = muiTheme.button;
-	      var flatButtonTheme = muiTheme.flatButton;
-
-	      return {
-	        buttonColor: flatButtonTheme.color,
-	        buttonFilterColor: flatButtonTheme.buttonFilterColor,
-	        buttonHeight: buttonTheme.height,
-	        buttonMinWidth: buttonTheme.minWidth,
-	        disabledTextColor: flatButtonTheme.disabledTextColor,
-	        primaryTextColor: flatButtonTheme.primaryTextColor,
-	        secondaryTextColor: flatButtonTheme.secondaryTextColor,
-	        textColor: flatButtonTheme.textColor,
-	        textTransform: flatButtonTheme.textTransform ? flatButtonTheme.textTransform : buttonTheme.textTransform ? buttonTheme.textTransform : 'uppercase'
-	      };
-	    },
-	    getChildrenClasses: function getChildrenClasses() {
-	      return [_enhancedButton2.default, _flatButtonLabel2.default];
-	    }
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      disabled: false,
-	      labelStyle: {},
-	      labelPosition: 'after',
-	      onKeyboardFocus: function onKeyboardFocus() {},
-	      onMouseEnter: function onMouseEnter() {},
-	      onMouseLeave: function onMouseLeave() {},
-	      onTouchStart: function onTouchStart() {},
-	      primary: false,
-	      secondary: false
-	    };
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      hovered: false,
-	      isKeyboardFocused: false,
-	      touch: false,
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
-	    };
-	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-
-	  //to update theme inside state whenever a new theme is passed down
-	  //from the parent / owner using context
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({ muiTheme: newMuiTheme });
-	  },
-	  _handleKeyboardFocus: function _handleKeyboardFocus(e, isKeyboardFocused) {
-	    this.setState({ isKeyboardFocused: isKeyboardFocused });
-	    this.props.onKeyboardFocus(e, isKeyboardFocused);
-	  },
-	  _handleMouseEnter: function _handleMouseEnter(e) {
-	    //Cancel hover styles for touch devices
-	    if (!this.state.touch) this.setState({ hovered: true });
-	    this.props.onMouseEnter(e);
-	  },
-	  _handleMouseLeave: function _handleMouseLeave(e) {
-	    this.setState({ hovered: false });
-	    this.props.onMouseLeave(e);
-	  },
-	  _handleTouchStart: function _handleTouchStart(e) {
-	    this.setState({ touch: true });
-	    this.props.onTouchStart(e);
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var children = _props.children;
-	    var disabled = _props.disabled;
-	    var hoverColor = _props.hoverColor;
-	    var backgroundColor = _props.backgroundColor;
-	    var icon = _props.icon;
-	    var label = _props.label;
-	    var labelStyle = _props.labelStyle;
-	    var labelPosition = _props.labelPosition;
-	    var primary = _props.primary;
-	    var rippleColor = _props.rippleColor;
-	    var secondary = _props.secondary;
-	    var style = _props.style;
-
-	    var other = _objectWithoutProperties(_props, ['children', 'disabled', 'hoverColor', 'backgroundColor', 'icon', 'label', 'labelStyle', 'labelPosition', 'primary', 'rippleColor', 'secondary', 'style']);
-
-	    var _constructor$getRelev = this.constructor.getRelevantContextKeys(this.state.muiTheme);
-
-	    var buttonColor = _constructor$getRelev.buttonColor;
-	    var buttonHeight = _constructor$getRelev.buttonHeight;
-	    var buttonMinWidth = _constructor$getRelev.buttonMinWidth;
-	    var disabledTextColor = _constructor$getRelev.disabledTextColor;
-	    var buttonFilterColor = _constructor$getRelev.buttonFilterColor;
-	    var primaryTextColor = _constructor$getRelev.primaryTextColor;
-	    var secondaryTextColor = _constructor$getRelev.secondaryTextColor;
-	    var textColor = _constructor$getRelev.textColor;
-	    var textTransform = _constructor$getRelev.textTransform;
-
-	    var defaultTextColor = disabled ? disabledTextColor : primary ? primaryTextColor : secondary ? secondaryTextColor : textColor;
-
-	    var defaultHoverColor = _colorManipulator2.default.fade(buttonFilterColor, 0.2);
-	    var defaultRippleColor = buttonFilterColor;
-	    var buttonHoverColor = hoverColor || defaultHoverColor;
-	    var buttonRippleColor = rippleColor || defaultRippleColor;
-	    var buttonBackgroundColor = backgroundColor || buttonColor;
-	    var hovered = (this.state.hovered || this.state.isKeyboardFocused) && !disabled;
-
-	    var mergedRootStyles = (0, _styles.mergeStyles)({
-	      color: defaultTextColor,
-	      transition: _transitions2.default.easeOut(),
-	      fontSize: _typography2.default.fontStyleButtonFontSize,
-	      letterSpacing: 0,
-	      textTransform: textTransform,
-	      fontWeight: _typography2.default.fontWeightMedium,
-	      borderRadius: 2,
-	      userSelect: 'none',
-	      position: 'relative',
-	      overflow: 'hidden',
-	      backgroundColor: hovered ? buttonHoverColor : buttonBackgroundColor,
-	      lineHeight: buttonHeight + 'px',
-	      minWidth: buttonMinWidth,
-	      padding: 0,
-	      margin: 0
-	    }, style);
-
-	    var iconCloned = undefined;
-	    var labelStyleIcon = {};
-
-	    if (icon) {
-	      iconCloned = _react2.default.cloneElement(icon, {
-	        color: mergedRootStyles.color,
-	        style: {
-	          verticalAlign: 'middle',
-	          marginLeft: labelPosition === 'before' ? 0 : 12,
-	          marginRight: labelPosition === 'before' ? 12 : 0
-	        }
-	      });
-
-	      if (labelPosition === 'before') {
-	        labelStyleIcon.paddingRight = 8;
-	      } else {
-	        labelStyleIcon.paddingLeft = 8;
-	      }
-	    }
-
-	    var labelElement = label ? _react2.default.createElement(_flatButtonLabel2.default, { label: label, style: (0, _styles.mergeStyles)(labelStyleIcon, labelStyle) }) : undefined;
-
-	    // Place label before or after children.
-	    var childrenFragment = labelPosition === 'before' ? {
-	      labelElement: labelElement,
-	      iconCloned: iconCloned,
-	      children: children
-	    } : {
-	      children: children,
-	      iconCloned: iconCloned,
-	      labelElement: labelElement
-	    };
-	    var enhancedButtonChildren = _children2.default.create(childrenFragment);
-
-	    return _react2.default.createElement(
-	      _enhancedButton2.default,
-	      _extends({}, other, {
-	        disabled: disabled,
-	        focusRippleColor: buttonRippleColor,
-	        focusRippleOpacity: 0.3,
-	        onKeyboardFocus: this._handleKeyboardFocus,
-	        onMouseLeave: this._handleMouseLeave,
-	        onMouseEnter: this._handleMouseEnter,
-	        onTouchStart: this._handleTouchStart,
-	        style: mergedRootStyles,
-	        touchRippleColor: buttonRippleColor,
-	        touchRippleOpacity: 0.3
-	      }),
-	      enhancedButtonChildren
-	    );
-	  }
-	});
-
-	exports.default = FlatButton;
-	module.exports = exports['default'];
-
-/***/ },
-/* 284 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _contextPure = __webpack_require__(222);
-
-	var _contextPure2 = _interopRequireDefault(_contextPure);
-
-	var _stylePropable = __webpack_require__(162);
-
-	var _stylePropable2 = _interopRequireDefault(_stylePropable);
-
-	var _getMuiTheme = __webpack_require__(193);
-
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var FlatButtonLabel = _react2.default.createClass({
-	  displayName: 'FlatButtonLabel',
-
-	  propTypes: {
-	    label: _react2.default.PropTypes.node,
-
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object
-	  },
-
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  mixins: [_contextPure2.default, _stylePropable2.default],
-
-	  statics: {
-	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
-	      return {
-	        spacingDesktopGutterLess: muiTheme.rawTheme.spacing.desktopGutterLess
-	      };
-	    }
-	  },
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
-	    };
-	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-
-	  //to update theme inside state whenever a new theme is passed down
-	  //from the parent / owner using context
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({ muiTheme: newMuiTheme });
-	  },
-
-	  render: function render() {
-	    var _props = this.props;
-	    var label = _props.label;
-	    var style = _props.style;
-
-	    var contextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
-
-	    var mergedRootStyles = this.mergeStyles({
-	      position: 'relative',
-	      paddingLeft: contextKeys.spacingDesktopGutterLess,
-	      paddingRight: contextKeys.spacingDesktopGutterLess
-	    }, style);
-
-	    return _react2.default.createElement(
-	      'span',
-	      { style: this.prepareStyles(mergedRootStyles) },
-	      label
-	    );
-	  }
-
-	});
-
-	exports.default = FlatButtonLabel;
-	module.exports = exports['default'];
-
-/***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _stylePropable = __webpack_require__(162);
-
-	var _stylePropable2 = _interopRequireDefault(_stylePropable);
-
-	var _transitions = __webpack_require__(190);
-
-	var _transitions2 = _interopRequireDefault(_transitions);
-
-	var _colors = __webpack_require__(211);
-
-	var _colors2 = _interopRequireDefault(_colors);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	var Overlay = _react2.default.createClass({
-	  displayName: 'Overlay',
-
-	  propTypes: {
-	    autoLockScrolling: _react2.default.PropTypes.bool,
-	    show: _react2.default.PropTypes.bool.isRequired,
-
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object,
-	    transitionEnabled: _react2.default.PropTypes.bool
-	  },
-
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  mixins: [_stylePropable2.default],
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      autoLockScrolling: true,
-	      transitionEnabled: true,
-	      style: {}
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    if (this.props.show) {
-	      this._applyAutoLockScrolling(this.props);
-	    }
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    if (this.props.show !== nextProps.show) {
-	      this._applyAutoLockScrolling(nextProps);
-	    }
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    if (this.props.show === true) {
-	      this._allowScrolling();
-	    }
-	  },
-
-	  _originalBodyOverflow: '',
-
-	  setOpacity: function setOpacity(opacity) {
-	    var overlay = _reactDom2.default.findDOMNode(this);
-	    overlay.style.opacity = opacity;
-	  },
-	  getStyles: function getStyles() {
-	    return {
-	      root: {
-	        position: 'fixed',
-	        height: '100%',
-	        width: '100%',
-	        top: 0,
-	        left: '-100%',
-	        opacity: 0,
-	        backgroundColor: _colors2.default.lightBlack,
-	        WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
-
-	        // Two ways to promote overlay to its own render layer
-	        willChange: 'opacity',
-	        transform: 'translateZ(0)',
-
-	        transition: this.props.transitionEnabled && _transitions2.default.easeOut('0ms', 'left', '400ms') + ',' + _transitions2.default.easeOut('400ms', 'opacity')
-	      },
-	      rootWhenShown: {
-	        left: '0',
-	        opacity: 1,
-	        transition: this.props.transitionEnabled && _transitions2.default.easeOut('0ms', 'left') + ',' + _transitions2.default.easeOut('400ms', 'opacity')
-	      }
-	    };
-	  },
-	  _applyAutoLockScrolling: function _applyAutoLockScrolling(props) {
-	    if (props.autoLockScrolling) {
-	      if (props.show) {
-	        this._preventScrolling();
-	      } else {
-	        this._allowScrolling();
-	      }
-	    }
-	  },
-	  _preventScrolling: function _preventScrolling() {
-	    var body = document.getElementsByTagName('body')[0];
-	    this._originalBodyOverflow = body.style.overflow;
-
-	    body.style.overflow = 'hidden';
-	  },
-	  _allowScrolling: function _allowScrolling() {
-	    var body = document.getElementsByTagName('body')[0];
-	    body.style.overflow = this._originalBodyOverflow || '';
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var show = _props.show;
-	    var style = _props.style;
-
-	    var other = _objectWithoutProperties(_props, ['show', 'style']);
-
-	    var styles = this.mergeStyles(this.getStyles().root, style, show && this.getStyles().rootWhenShown);
-
-	    return _react2.default.createElement('div', _extends({}, other, { style: this.prepareStyles(styles) }));
-	  }
-	});
-
-	exports.default = Overlay;
-	module.exports = exports['default'];
-
-/***/ },
-/* 286 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(287);
+	var content = __webpack_require__(289);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(289)(content, {});
+	var update = __webpack_require__(291)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -59634,21 +60119,21 @@
 	}
 
 /***/ },
-/* 287 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(288)();
+	exports = module.exports = __webpack_require__(290)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3399ff; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3399ff;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n\n.details-modal h3 {\n  padding: 0 !important; }\n\n.details-modal .details-modal-container {\n  text-align: center;\n  line-height: 1.5; }\n  .details-modal .details-modal-container .dmc-header {\n    font-size: 35px; }\n  .details-modal .details-modal-container .dmc-body {\n    margin: 30px 0; }\n  .details-modal .details-modal-container .dmc-no-worries {\n    margin: 20px 0;\n    font-size: 20px; }\n", ""]);
+	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3F51B5; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3F51B5;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n\n.details-modal h3 {\n  padding: 0 !important; }\n\n.details-modal .details-modal-container {\n  text-align: center;\n  line-height: 1.5; }\n  .details-modal .details-modal-container .dmc-header {\n    font-size: 35px; }\n  .details-modal .details-modal-container .dmc-body {\n    margin: 30px 0; }\n  .details-modal .details-modal-container .dmc-no-worries {\n    margin: 20px 0;\n    font-size: 20px; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 288 */
+/* 290 */
 /***/ function(module, exports) {
 
 	/*
@@ -59704,7 +60189,7 @@
 
 
 /***/ },
-/* 289 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -59956,23 +60441,23 @@
 
 
 /***/ },
-/* 290 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var defaultClickRejectionStrategy = __webpack_require__(291);
+	var defaultClickRejectionStrategy = __webpack_require__(293);
 
 	module.exports = function injectTapEventPlugin (strategyOverrides) {
 	  strategyOverrides = strategyOverrides || {}
 	  var shouldRejectClick = strategyOverrides.shouldRejectClick || defaultClickRejectionStrategy;
 
 	  __webpack_require__(31).injection.injectEventPluginsByName({
-	    "TapEventPlugin":       __webpack_require__(292)(shouldRejectClick)
+	    "TapEventPlugin":       __webpack_require__(294)(shouldRejectClick)
 	  });
 	};
 
 
 /***/ },
-/* 291 */
+/* 293 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -59983,7 +60468,7 @@
 
 
 /***/ },
-/* 292 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -60011,10 +60496,10 @@
 	var EventPluginUtils = __webpack_require__(33);
 	var EventPropagators = __webpack_require__(73);
 	var SyntheticUIEvent = __webpack_require__(87);
-	var TouchEventUtils = __webpack_require__(293);
+	var TouchEventUtils = __webpack_require__(295);
 	var ViewportMetrics = __webpack_require__(38);
 
-	var keyOf = __webpack_require__(294);
+	var keyOf = __webpack_require__(296);
 	var topLevelTypes = EventConstants.topLevelTypes;
 
 	var isStartish = EventPluginUtils.isStartish;
@@ -60160,7 +60645,7 @@
 
 
 /***/ },
-/* 293 */
+/* 295 */
 /***/ function(module, exports) {
 
 	/**
@@ -60208,7 +60693,7 @@
 
 
 /***/ },
-/* 294 */
+/* 296 */
 /***/ function(module, exports) {
 
 	/**
@@ -60246,487 +60731,6 @@
 	};
 
 	module.exports = keyOf;
-
-/***/ },
-/* 295 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _stylePropable = __webpack_require__(162);
-
-	var _stylePropable2 = _interopRequireDefault(_stylePropable);
-
-	var _transitions = __webpack_require__(190);
-
-	var _transitions2 = _interopRequireDefault(_transitions);
-
-	var _clickAwayable = __webpack_require__(235);
-
-	var _clickAwayable2 = _interopRequireDefault(_clickAwayable);
-
-	var _flatButton = __webpack_require__(283);
-
-	var _flatButton2 = _interopRequireDefault(_flatButton);
-
-	var _getMuiTheme = __webpack_require__(193);
-
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-
-	var _contextPure = __webpack_require__(222);
-
-	var _contextPure2 = _interopRequireDefault(_contextPure);
-
-	var _styleResizable = __webpack_require__(296);
-
-	var _styleResizable2 = _interopRequireDefault(_styleResizable);
-
-	var _warning = __webpack_require__(183);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	var _deprecatedPropType = __webpack_require__(272);
-
-	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	var Snackbar = _react2.default.createClass({
-	  displayName: 'Snackbar',
-
-	  propTypes: {
-	    /**
-	     * The label for the action on the snackbar.
-	     */
-	    action: _react2.default.PropTypes.string,
-
-	    /**
-	     * The number of milliseconds to wait before automatically dismissing.
-	     * If no value is specified the snackbar will dismiss normally.
-	     * If a value is provided the snackbar can still be dismissed normally.
-	     * If a snackbar is dismissed before the timer expires, the timer will be cleared.
-	     */
-	    autoHideDuration: _react2.default.PropTypes.number,
-
-	    /**
-	     * Override the inline-styles of the body element.
-	     */
-	    bodyStyle: _react2.default.PropTypes.object,
-
-	    /**
-	     * The css class name of the root element.
-	     */
-	    className: _react2.default.PropTypes.string,
-
-	    /**
-	     * The message to be displayed.
-	     */
-	    message: _react2.default.PropTypes.node.isRequired,
-
-	    /**
-	     * Fired when the action button is touchtapped.
-	     *
-	     * @param {object} event Action button event.
-	     */
-	    onActionTouchTap: _react2.default.PropTypes.func,
-
-	    /**
-	     * Fired when the `Snackbar` is dismissed.
-	     */
-	    onDismiss: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.func, 'Instead, use the open property to control the component.'),
-
-	    /**
-	     * Fired when the `Snackbar` is requested to be closed by a click outside the `Snackbar`, or after the
-	     * `autoHideDuration` timer expires.
-	     *
-	     * Typically `onRequestClose` is used to set state in the parent component, which is used to control the `Snackbar`
-	     * `open` prop.
-	     *
-	     * The `reason` parameter can optionally be used to control the response to `onRequestClose`,
-	     * for example ignoring `clickaway`.
-	     *
-	     * @param {string} reason Can be:`"timeout"` (`autoHideDuration` expired) or: `"clickaway"`
-	     */
-	    onRequestClose: _react2.default.PropTypes.func.isRequired,
-
-	    /**
-	     * Fired when the `Snackbar` is shown.
-	     */
-	    onShow: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.func, 'Instead, use the open property to control the component.'),
-
-	    /**
-	     * Controls whether the `Snackbar` is opened or not.
-	     */
-	    open: _react2.default.PropTypes.bool.isRequired,
-
-	    /**
-	     * If true, the `Snackbar` will open once mounted.
-	     */
-	    openOnMount: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.bool, 'Instead, use the open property to control the component.'),
-
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object
-	  },
-
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-
-	  mixins: [_stylePropable2.default, _styleResizable2.default, _clickAwayable2.default, _contextPure2.default],
-
-	  statics: {
-	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
-	      var theme = muiTheme.snackbar;
-	      var spacing = muiTheme.rawTheme.spacing;
-
-	      return {
-	        textColor: theme.textColor,
-	        backgroundColor: theme.backgroundColor,
-	        desktopGutter: spacing.desktopGutter,
-	        desktopSubheaderHeight: spacing.desktopSubheaderHeight,
-	        actionColor: theme.actionColor
-	      };
-	    },
-	    getChildrenClasses: function getChildrenClasses() {
-	      return [_flatButton2.default];
-	    }
-	  },
-
-	  getInitialState: function getInitialState() {
-	    var open = this.props.open;
-
-	    if (open === null) {
-	      open = this.props.openOnMount;
-	    }
-
-	    return {
-	      open: open,
-	      message: this.props.message,
-	      action: this.props.action,
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
-	    };
-	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-
-	    if (this.state.open) {
-	      this._setAutoHideTimer();
-
-	      //Only Bind clickaway after transition finishes
-	      this.timerTransitionId = setTimeout(function () {
-	        _this._bindClickAway();
-	      }, 400);
-	    }
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var _this2 = this;
-
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({
-	      muiTheme: newMuiTheme
-	    });
-
-	    if (this.state.open && nextProps.open === this.props.open && (nextProps.message !== this.props.message || nextProps.action !== this.props.action)) {
-	      this.setState({
-	        open: false
-	      });
-
-	      clearTimeout(this.timerOneAtTheTimeId);
-	      this.timerOneAtTheTimeId = setTimeout(function () {
-	        _this2.setState({
-	          message: nextProps.message,
-	          action: nextProps.action,
-	          open: true
-	        });
-	      }, 400);
-	    } else {
-	      var open = nextProps.open;
-
-	      this.setState({
-	        open: open !== null ? open : this.state.open,
-	        message: nextProps.message,
-	        action: nextProps.action
-	      });
-	    }
-	  },
-	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	    var _this3 = this;
-
-	    if (prevState.open !== this.state.open) {
-	      if (this.state.open) {
-	        this._setAutoHideTimer();
-
-	        //Only Bind clickaway after transition finishes
-	        this.timerTransitionId = setTimeout(function () {
-	          _this3._bindClickAway();
-	        }, 400);
-	      } else {
-	        clearTimeout(this.timerAutoHideId);
-	        this._unbindClickAway();
-	      }
-	    }
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    clearTimeout(this.timerAutoHideId);
-	    clearTimeout(this.timerTransitionId);
-	    clearTimeout(this.timerOneAtTheTimeId);
-	    this._unbindClickAway();
-	  },
-
-	  manuallyBindClickAway: true,
-
-	  timerAutoHideId: undefined,
-	  timerTransitionId: undefined,
-	  timerOneAtTheTimeId: undefined,
-
-	  componentClickAway: function componentClickAway() {
-	    if (this.props.open !== null && this.props.onRequestClose) {
-	      this.props.onRequestClose('clickaway');
-	    } else {
-	      this.setState({ open: false });
-	    }
-	  },
-	  getStyles: function getStyles() {
-	    var _constructor$getRelev = this.constructor.getRelevantContextKeys(this.state.muiTheme);
-
-	    var textColor = _constructor$getRelev.textColor;
-	    var backgroundColor = _constructor$getRelev.backgroundColor;
-	    var desktopGutter = _constructor$getRelev.desktopGutter;
-	    var desktopSubheaderHeight = _constructor$getRelev.desktopSubheaderHeight;
-	    var actionColor = _constructor$getRelev.actionColor;
-
-	    var isSmall = this.state.deviceSize === this.constructor.Sizes.SMALL;
-
-	    var styles = {
-	      root: {
-	        position: 'fixed',
-	        left: 0,
-	        display: 'flex',
-	        right: 0,
-	        bottom: 0,
-	        zIndex: this.state.muiTheme.zIndex.snackbar,
-	        visibility: 'hidden',
-	        transform: 'translate3d(0, ' + desktopSubheaderHeight + 'px, 0)',
-	        transition: _transitions2.default.easeOut('400ms', 'transform') + ',' + _transitions2.default.easeOut('400ms', 'visibility')
-	      },
-	      rootWhenOpen: {
-	        visibility: 'visible',
-	        transform: 'translate3d(0, 0, 0)'
-	      },
-	      body: {
-	        backgroundColor: backgroundColor,
-	        padding: '0 ' + desktopGutter + 'px',
-	        height: desktopSubheaderHeight,
-	        lineHeight: desktopSubheaderHeight + 'px',
-	        borderRadius: isSmall ? 0 : 2,
-	        maxWidth: isSmall ? 'inherit' : 568,
-	        minWidth: isSmall ? 'inherit' : 288,
-	        flexGrow: isSmall ? 1 : 0,
-	        margin: 'auto'
-	      },
-	      content: {
-	        fontSize: 14,
-	        color: textColor,
-	        opacity: 0,
-	        transition: _transitions2.default.easeOut('400ms', 'opacity')
-	      },
-	      contentWhenOpen: {
-	        opacity: 1,
-	        transition: _transitions2.default.easeOut('500ms', 'opacity', '100ms')
-	      },
-	      action: {
-	        color: actionColor,
-	        float: 'right',
-	        marginTop: 6,
-	        marginRight: -16,
-	        marginLeft: desktopGutter,
-	        backgroundColor: 'transparent'
-	      }
-	    };
-
-	    return styles;
-	  },
-	  show: function show() {
-	    process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'show has been deprecated in favor of explicitly setting the open property.') : undefined;
-
-	    this.setState({
-	      open: true
-	    });
-
-	    if (this.props.onShow) {
-	      this.props.onShow();
-	    }
-	  },
-	  _onDismiss: function _onDismiss() {
-	    if (this.props.onDismiss) {
-	      this.props.onDismiss();
-	    }
-	  },
-	  dismiss: function dismiss() {
-	    process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'dismiss has been deprecated in favor of explicitly setting the open property.') : undefined;
-
-	    this.setState({
-	      open: false
-	    }, this._onDismiss);
-	  },
-	  _setAutoHideTimer: function _setAutoHideTimer() {
-	    var _this4 = this;
-
-	    var autoHideDuration = this.props.autoHideDuration;
-
-	    if (autoHideDuration > 0) {
-	      clearTimeout(this.timerAutoHideId);
-	      this.timerAutoHideId = setTimeout(function () {
-	        if (_this4.props.open !== null && _this4.props.onRequestClose) {
-	          _this4.props.onRequestClose('timeout');
-	        } else {
-	          _this4.setState({ open: false });
-	        }
-	      }, autoHideDuration);
-	    }
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var onActionTouchTap = _props.onActionTouchTap;
-	    var style = _props.style;
-	    var bodyStyle = _props.bodyStyle;
-
-	    var others = _objectWithoutProperties(_props, ['onActionTouchTap', 'style', 'bodyStyle']);
-
-	    var styles = this.getStyles();
-
-	    var _state = this.state;
-	    var open = _state.open;
-	    var action = _state.action;
-	    var message = _state.message;
-
-	    var rootStyles = open ? this.mergeStyles(styles.root, styles.rootWhenOpen, style) : this.mergeStyles(styles.root, style);
-
-	    var actionButton = undefined;
-	    if (action) {
-	      actionButton = _react2.default.createElement(_flatButton2.default, {
-	        style: styles.action,
-	        label: action,
-	        onTouchTap: onActionTouchTap
-	      });
-	    }
-
-	    var mergedBodyStyle = this.mergeStyles(styles.body, bodyStyle);
-
-	    var contentStyle = open ? this.mergeStyles(styles.content, styles.contentWhenOpen) : styles.content;
-
-	    return _react2.default.createElement(
-	      'div',
-	      _extends({}, others, { style: rootStyles }),
-	      _react2.default.createElement(
-	        'div',
-	        { style: mergedBodyStyle },
-	        _react2.default.createElement(
-	          'div',
-	          { style: contentStyle },
-	          _react2.default.createElement(
-	            'span',
-	            null,
-	            message
-	          ),
-	          actionButton
-	        )
-	      )
-	    );
-	  }
-	});
-
-	exports.default = Snackbar;
-	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 296 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _events = __webpack_require__(236);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Sizes = {
-	  SMALL: 1,
-	  MEDIUM: 2,
-	  LARGE: 3
-	};
-
-	exports.default = {
-
-	  statics: {
-	    Sizes: Sizes
-	  },
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      deviceSize: Sizes.SMALL
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this._updateDeviceSize();
-	    if (!this.manuallyBindResize) this._bindResize();
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this._unbindResize();
-	  },
-	  isDeviceSize: function isDeviceSize(desiredSize) {
-	    return this.state.deviceSize >= desiredSize;
-	  },
-	  _updateDeviceSize: function _updateDeviceSize() {
-	    var width = window.innerWidth;
-
-	    if (width >= 992) {
-	      this.setState({ deviceSize: Sizes.LARGE });
-	    } else if (width >= 768) {
-	      this.setState({ deviceSize: Sizes.MEDIUM });
-	    } else {
-	      // width < 768
-	      this.setState({ deviceSize: Sizes.SMALL });
-	    }
-	  },
-	  _bindResize: function _bindResize() {
-	    _events2.default.on(window, 'resize', this._updateDeviceSize);
-	  },
-	  _unbindResize: function _unbindResize() {
-	    _events2.default.off(window, 'resize', this._updateDeviceSize);
-	  }
-	};
-	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
