@@ -19793,15 +19793,17 @@
 	 * @returns {string}
 	 */
 	function getMatchHeaderDetails(content) {
-	    var teamShortNames = [];
+	    var that = this,
+	        teamShortNames = [];
 
-	    _lodash2.default.forEach(content.team, function (team) {
-	        teamShortNames.push(getTeamName(team));
-	    });
+	    if (!that.matchHeader) {
+	        _lodash2.default.forEach(content.team, function (team) {
+	            teamShortNames.push(getTeamName(team));
+	        });
+	        that.matchHeader = teamShortNames.join(' v/s ');
+	    }
 
-	    this.matchHeader = teamShortNames.join(' v/s ');
-
-	    return this.matchHeader;
+	    return that.matchHeader;
 	}
 
 	function getTeamName(team) {
@@ -19831,6 +19833,11 @@
 	        label = eventDetails.label || event,
 	        body = void 0;
 
+	    if (!event) {
+	        console.log('undefined ', ball);
+	        return;
+	    }
+
 	    switch (event) {
 	        case 'EVERY_OVER':
 	            body = 'Over complete.';
@@ -19843,7 +19850,7 @@
 
 	    body += '\n\n' + getCurrentBattingTeamDetails(content);
 
-	    var notification = new Notification('Score Update ( ' + (that.matchHeader || getMatchHeaderDetails.call(that, content)) + ' )', {
+	    var notification = new Notification('Score Update ( ' + getMatchHeaderDetails.call(that, content) + ' )', {
 	        icon: icon,
 	        body: body
 	    });
@@ -19869,6 +19876,24 @@
 	    });
 	}
 
+	function changeFevicon(on) {
+	    var documentHead = document.getElementsByTagName('head')[0],
+	        link = document.createElement('link'),
+	        oldLink = document.getElementById('dynamic-favicon');
+
+	    link.id = 'dynamic-favicon';
+	    link.rel = 'shortcut icon';
+	    link.href = on ? './src/img/favicon-on.ico' : './src/img/favicon-off.ico';
+	    if (oldLink) {
+	        documentHead.removeChild(oldLink);
+	    }
+	    documentHead.appendChild(link);
+	}
+
+	function updateHeader(content) {
+	    document.title = getMatchHeaderDetails.call(this, content) + ' - ' + getCurrentBattingTeamDetails(content);
+	}
+
 	function onSnackBarClose() {
 	    var that = this;
 
@@ -19891,11 +19916,13 @@
 	    that.previousBall = undefined;
 
 	    that.setState({ selectedEvents: selectedEvents, start: true, showSnackbar: true });
+	    changeFevicon(true);
 	}
 
 	function onStopClick() {
 	    var that = this;
 	    that.setState({ start: undefined });
+	    changeFevicon();
 	}
 
 	var LiveSports = function (_Component) {
@@ -20015,6 +20042,18 @@
 	                            onClick: (start ? onStopClick : onStartClick).bind(this),
 	                            disabled: !state.selectedMatch,
 	                            style: { margin: 'auto' } })
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'share-btns' },
+	                        _react2.default.createElement('div', { className: 'fb-share-button share-btn', 'data-href': 'http://91aman.github.io/LiveSports',
+	                            'data-layout': 'button', 'data-mobile-iframe': 'true' }),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { className: 'twitter-share-button share-btn',
+	                                href: 'https://twitter.com/intent/tweet?text=Wanna%20get%20Live%20Updates,%20Check%20this%20out%20-' },
+	                            'Tweet'
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -20068,6 +20107,8 @@
 	                                that.previousBall = currentBall;
 	                                that.previousOver = currentOverNo;
 
+	                                updateHeader.call(that, content);
+
 	                                for (iter = 0; iter < overs.length; iter++) {
 	                                    var over = overs[iter],
 	                                        _balls = over.ball || [],
@@ -20108,6 +20149,8 @@
 	            if (Notification.permission !== "granted") {
 	                Notification.requestPermission();
 	            }
+
+	            changeFevicon();
 
 	            _jquery2.default.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', function (data) {
 	                var jDummy = (0, _jquery2.default)('<div class="dummy"></div>'),
@@ -60309,7 +60352,7 @@
 
 
 	// module
-	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3F51B5; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3F51B5;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n\n.details-modal {\n  text-align: center;\n  line-height: 1.5; }\n  .details-modal .dm-title {\n    font-size: 35px;\n    background: #3F51B5; }\n  .details-modal .dmc-body {\n    margin: 30px 0; }\n  .details-modal .dmc-no-worries {\n    margin: 20px 0;\n    font-size: 20px; }\n  .details-modal .cricinfo-info {\n    font-size: 10px; }\n", ""]);
+	exports.push([module.id, "html, body {\n  height: 100%; }\n\n.overlay {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.4);\n  z-index: 1;\n  text-align: center; }\n  .overlay.hide {\n    display: none; }\n  .overlay .overlay-icon {\n    position: absolute;\n    top: 50%;\n    transform: translateY(-50%); }\n\nbody {\n  margin: 0;\n  font-family: sans-serif; }\n\n.title {\n  text-align: center;\n  font-size: 50px;\n  padding: 20px;\n  color: white;\n  background: #3F51B5; }\n\n.body {\n  margin: 48px 0; }\n\n.footer {\n  position: fixed;\n  bottom: 0;\n  width: 100%;\n  padding: 10px;\n  height: 18px;\n  background: #3F51B5;\n  text-align: center;\n  color: white;\n  font-size: 14px; }\n  .footer a {\n    text-decoration: none;\n    color: white; }\n\n.footer-heart {\n  color: red; }\n\n.control-group {\n  margin-bottom: 18px; }\n  .control-group .control-label {\n    width: 750px;\n    margin: auto;\n    text-align: left;\n    color: rgba(0, 0, 0, 0.498039);\n    font-size: 12.5px;\n    margin-bottom: 5px; }\n  .control-group .controls {\n    width: 750px;\n    margin: auto; }\n    .control-group .controls:after {\n      content: \"\";\n      display: table;\n      clear: both; }\n\n.notificationSelector {\n  width: 250px !important;\n  margin-bottom: 16px;\n  float: left; }\n  .notificationSelector:nth-child(odd) {\n    margin-right: 250px; }\n\n.start-btn {\n  text-align: center; }\n\n.share-btns {\n  text-align: center;\n  margin: 10px; }\n\n.share-btn {\n  margin: 0 10px; }\n\n.fb-share-button {\n  vertical-align: top; }\n\n.details-modal {\n  text-align: center;\n  line-height: 1.5; }\n  .details-modal .dm-title {\n    font-size: 35px;\n    background: #3F51B5; }\n  .details-modal .dmc-body {\n    margin: 30px 0; }\n  .details-modal .dmc-no-worries {\n    margin: 20px 0;\n    font-size: 20px; }\n  .details-modal .cricinfo-info {\n    font-size: 10px; }\n", ""]);
 
 	// exports
 
