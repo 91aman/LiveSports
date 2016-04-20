@@ -284,9 +284,8 @@ class LiveSports extends Component {
                     </div>
 
                 </div>
-                <div className="footer">Made with <span className="footer-heart"> &#x2764; </span> by <a target="_blank"
-                                                                                                         href="http://ajain.in/">Aman
-                    Jain</a></div>
+                <div className="footer">Made with <span className="footer-heart"> &#x2764; </span> by Aman
+                    Jain</div>
             </div>
         )
     }
