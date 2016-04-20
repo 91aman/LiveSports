@@ -20065,13 +20065,7 @@
 	                        { className: 'footer-heart' },
 	                        ' ❤ '
 	                    ),
-	                    ' by ',
-	                    _react2.default.createElement(
-	                        'a',
-	                        { target: '_blank',
-	                            href: 'http://ajain.in/' },
-	                        'Aman Jain'
-	                    )
+	                    ' by Aman Jain'
 	                )
 	            );
 	        }
