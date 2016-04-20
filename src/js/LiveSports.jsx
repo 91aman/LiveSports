@@ -58,15 +58,17 @@ let eventMap = {
  * @returns {string}
  */
 function getMatchHeaderDetails(content) {
-    let teamShortNames = [];
+    let that = this,
+        teamShortNames = [];
 
-    _.forEach(content.team, (team) => {
-        teamShortNames.push(getTeamName(team));
-    });
+    if (!that.matchHeader) {
+        _.forEach(content.team, (team) => {
+            teamShortNames.push(getTeamName(team));
+        });
+        that.matchHeader = teamShortNames.join(' v/s ');
+    }
 
-    this.matchHeader = teamShortNames.join(' v/s ');
-
-    return this.matchHeader;
+    return that.matchHeader;
 }
 
 function getTeamName(team) {
@@ -92,6 +94,11 @@ function pushNotification(ball = {}, content, eventarg) {
         label = eventDetails.label || event,
         body;
 
+    if (!event) {
+        console.log('undefined ', ball);
+        return;
+    }
+
     switch (event) {
         case 'EVERY_OVER':
             body = 'Over complete.';
@@ -104,7 +111,7 @@ function pushNotification(ball = {}, content, eventarg) {
 
     body += '\n\n' + getCurrentBattingTeamDetails(content);
 
-    var notification = new Notification('Score Update ( ' + (that.matchHeader || getMatchHeaderDetails.call(that, content)) + ' )', {
+    var notification = new Notification('Score Update ( ' + (getMatchHeaderDetails.call(that, content)) + ' )', {
         icon,
         body
     });
@@ -130,6 +137,24 @@ function onDetailDialogClose() {
     })
 }
 
+function changeFevicon(on) {
+    let documentHead = document.getElementsByTagName('head')[0],
+        link = document.createElement('link'),
+        oldLink = document.getElementById('dynamic-favicon');
+
+    link.id = 'dynamic-favicon';
+    link.rel = 'shortcut icon';
+    link.href = on ? './src/img/favicon-on.ico' : './src/img/favicon-off.ico';
+    if (oldLink) {
+        documentHead.removeChild(oldLink);
+    }
+    documentHead.appendChild(link);
+}
+
+function updateHeader(content) {
+    document.title = getMatchHeaderDetails.call(this, content) + ' - ' + getCurrentBattingTeamDetails(content);
+}
+
 function onSnackBarClose() {
     let that = this;
 
@@ -152,11 +177,13 @@ function onStartClick(event, index, value) {
     that.previousBall = undefined;
 
     that.setState({selectedEvents: selectedEvents, start: true, showSnackbar: true});
+    changeFevicon(true);
 }
 
 function onStopClick() {
     let that = this;
     that.setState({start: undefined});
+    changeFevicon();
 }
 
 class LiveSports extends Component {
@@ -185,7 +212,7 @@ class LiveSports extends Component {
 
         _.forEach(that.state.liveMatches, (values, key) => {
 
-            iter && matchOptionsEl.push(<Divider key={iter} />);
+            iter && matchOptionsEl.push(<Divider key={iter}/>);
 
             matchOptionsEl.push(<MenuItem key={key} value={key} primaryText={key} disabled={true}></MenuItem>);
             values.forEach((value) => {
@@ -248,6 +275,13 @@ class LiveSports extends Component {
                                       disabled={!state.selectedMatch}
                                       style={ {margin: 'auto'}}/>
                     </div>
+                    <div className="share-btns">
+                        <div className="fb-share-button share-btn" data-href="http://91aman.github.io/LiveSports"
+                             data-layout="button" data-mobile-iframe="true"></div>
+                        <a className="twitter-share-button share-btn"
+                           href="https://twitter.com/intent/tweet?text=Wanna%20get%20Live%20Updates,%20Check%20this%20out%20-">
+                            Tweet</a>
+                    </div>
 
                 </div>
                 <div className="footer">Made with <span className="footer-heart"> &#x2764; </span> by <a target="_blank"
@@ -285,6 +319,8 @@ class LiveSports extends Component {
 
                             that.previousBall = currentBall;
                             that.previousOver = currentOverNo;
+
+                            updateHeader.call(that, content);
 
                             for (iter = 0; iter < overs.length; iter++) {
                                 let over = overs[iter],
@@ -324,6 +360,8 @@ class LiveSports extends Component {
         if (Notification.permission !== "granted") {
             Notification.requestPermission();
         }
+
+        changeFevicon();
 
         $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent('http://www.espncricinfo.com/ci/engine/match/index/live.html') + '&callback=?', (data) => {
             let jDummy = $('<div class="dummy"></div>'),
