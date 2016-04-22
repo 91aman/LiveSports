@@ -19807,7 +19807,7 @@
 	}
 
 	function getTeamName(team) {
-	    return team.team_abbreviation || team.team_short_name || team.team_name;
+	    return team ? team.team_abbreviation || team.team_short_name || team.team_name : '';
 	}
 
 	function getCurrentBattingTeamDetails(content) {
