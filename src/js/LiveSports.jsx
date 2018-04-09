@@ -355,6 +355,7 @@ class LiveSports extends Component {
     }
 
     componentDidMount() {
+        console.log('v1.0.0');
 
         if (Notification.permission !== "granted") {
             Notification.requestPermission();
@@ -376,14 +377,14 @@ class LiveSports extends Component {
 
                 matchGroup.find('.default-match-block').each((iter, value)=> {
                     let matchEl = $(value),
-                        matchHref = matchEl.find('a').attr('href'),
-                        splitMatchHref = matchHref.split('.')[0].split('/'),
-                        matchId = splitMatchHref[splitMatchHref.length - 1],
+                        matchHref = matchEl.find('a').attr('href') || '',
+                        seriesId = _.get(matchHref.match(/series\/(\d+)\//), [1]),
+                        gameId = _.get(matchHref.match(/game\/(\d+)\//), [1]),
                         innings1 = matchEl.find('.innings-info-1').text(),
                         innings2 = matchEl.find('.innings-info-2').text();
 
                     matchInGroup.push({
-                        id: matchId,
+                        id: gameId,
                         text: innings1 + ' v/s ' + innings2,
                         secondaryText: matchEl.find('.match-info .bold').text()
                     });

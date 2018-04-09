@@ -20140,6 +20140,8 @@
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
+	            console.log('v1.0.0');
+
 	            if (Notification.permission !== "granted") {
 	                Notification.requestPermission();
 	            }
@@ -20160,14 +20162,14 @@
 
 	                    matchGroup.find('.default-match-block').each(function (iter, value) {
 	                        var matchEl = (0, _jquery2.default)(value),
-	                            matchHref = matchEl.find('a').attr('href'),
-	                            splitMatchHref = matchHref.split('.')[0].split('/'),
-	                            matchId = splitMatchHref[splitMatchHref.length - 1],
+	                            matchHref = matchEl.find('a').attr('href') || '',
+	                            seriesId = _lodash2.default.get(matchHref.match(/series\/(\d+)\//), [1]),
+	                            gameId = _lodash2.default.get(matchHref.match(/game\/(\d+)\//), [1]),
 	                            innings1 = matchEl.find('.innings-info-1').text(),
 	                            innings2 = matchEl.find('.innings-info-2').text();
 
 	                        matchInGroup.push({
-	                            id: matchId,
+	                            id: gameId,
 	                            text: innings1 + ' v/s ' + innings2,
 	                            secondaryText: matchEl.find('.match-info .bold').text()
 	                        });
